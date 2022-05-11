@@ -49,6 +49,7 @@ if __FILE__ == $PROGRAM_NAME
     # [NOTE] Services called
     # - ":Renderer (pointer to SDL_Renderer)" and
     # - ":Input (instance of system/input)"
+    # - ":ScreenShot (instance of system/screenshot)"
     # are provided by the system and always available by default.
     services.register(:Hammer, Hammer.new.setup(services.get(:Renderer), services.get(:Input)))
     services.register(:CursorCircle, Circle::Cache.new(radius: 15.0, r: 255, g: 32, b: 32, a: 128))

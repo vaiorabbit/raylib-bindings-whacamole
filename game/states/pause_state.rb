@@ -12,6 +12,12 @@ class PauseState < GameState
     mapping.register_button(:resume_game, SDL::CONTROLLER_BUTTON_START, gamepad_id: 0)
     mapping.register_mouse(:resume_game, SDL::BUTTON_LEFT, repeat_enabled: false)
     input.register_mapping(mapping)
+    @screenshot = services.get(:ScreenShot)
+  end
+
+  def cleanup
+    @screenshot = nil
+    super
   end
 
   def enter(_prev_state_id)
@@ -27,6 +33,7 @@ class PauseState < GameState
 
   def leave(_next_state_id)
     input.unset_mapping
+    @screenshot.release_texture
     @prev_state_id = nil
   end
 
@@ -47,6 +54,7 @@ class PauseState < GameState
   end
 
   def render
+    # @screenshot.render(r: 192, g: 192, b: 192) # Enable this to cheat the game ;-P
     Text.set(32, 230, "              PAUSE", Text::RED)
     Text.set(32, 250, "  Click or press SPACE to resume\n          ESC to exit", Text::WHITE) if @show_text
   end

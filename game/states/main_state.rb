@@ -2,6 +2,7 @@ require 'sdl2'
 require_relative '../../system/draw'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
+require_relative '../../system/screenshot'
 require_relative '../objects/hammer'
 require_relative '../objects/mole'
 require_relative '../layout'
@@ -20,6 +21,8 @@ class MainState < GameState
     mapping.register_key(:pause_game, SDL::SDLK_ESCAPE)
     mapping.register_mouse(:hammer_attack, SDL::BUTTON_LEFT, repeat_enabled: false)
     input.register_mapping(mapping)
+
+    @screenshot = services.get(:ScreenShot)
 
     @hammer = services.get(:Hammer)
     @hammer.x = Layout.size(:hammer_image)[0]
@@ -41,6 +44,7 @@ class MainState < GameState
     @grass = nil
     @background = nil
     @effects = nil
+    @screenshot = nil
     super
   end
 
@@ -50,6 +54,7 @@ class MainState < GameState
   end
 
   def leave(_next_state_id)
+    @screenshot.capture
     input.unset_mapping
   end
 

@@ -3,7 +3,7 @@
 # Whac-a-Mole! : Ruby SDL2 bindings demo #
 
 *   Created : 2022-05-10
-*   Last modified : 2022-05-10
+*   Last modified : 2022-05-12
 
 ## Usage ##
 

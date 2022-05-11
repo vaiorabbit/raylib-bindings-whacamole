@@ -2,6 +2,7 @@ require 'sdl2'
 require_relative 'game_state'
 require_relative 'image'
 require_relative 'input'
+require_relative 'screenshot'
 require_relative 'services'
 require_relative 'text'
 require_relative 'timer'
@@ -24,6 +25,7 @@ class Application
     @window = nil
     @renderer = nil
 
+    @screenshot = ScreenShot.new(width: @screen_width, height: @screen_height)
     @input = Input.new
     @state_manager = GameStateManager.new
 
@@ -50,11 +52,14 @@ class Application
 
     Text.setup(@renderer)
 
+    @screenshot.setup(@renderer)
+
     @input.setup
 
     @services.setup
     @services.register_external(:Renderer, @renderer)
     @services.register_external(:Input, @input)
+    @services.register_external(:ScreenShot, @screenshot)
 
     setup_func.call(@services)
 
@@ -66,6 +71,7 @@ class Application
     @state_manager.cleanup
     @services.cleanup
     @input.cleanup
+    @screenshot.cleanup
     Text.cleanup()
     SDL.DestroyRenderer(@renderer)
     SDL.SetWindowGrab(@window, SDL::FALSE)
