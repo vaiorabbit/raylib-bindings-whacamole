@@ -1,3 +1,8 @@
+2022-05-22  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* third_party/SDL2/Scirpts: Added
+	* Support Windows
+
 2022-05-12  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* system/screenshot.rb: Added
