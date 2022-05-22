@@ -51,6 +51,8 @@ class MainState < GameState
   def enter(_prev_state_id)
     input.set_mapping(:main)
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
+    @hammer.down = false
+    @effects.hide
   end
 
   def leave(_next_state_id)

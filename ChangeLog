@@ -2,6 +2,7 @@
 
 	* third_party/SDL2/Scirpts: Added
 	* Support Windows
+	* Fixed several visual glitches seen on restarting game
 
 2022-05-12  vaiorabbit  <http://twitter.com/vaiorabbit>
 

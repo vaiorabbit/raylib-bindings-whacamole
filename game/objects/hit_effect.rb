@@ -123,6 +123,10 @@ class HitEffects
     end
   end
 
+  def hide
+    @effects.each(&:hide)
+  end
+
   def update(dt)
     @effects.each do |effect|
       effect.update(dt)
