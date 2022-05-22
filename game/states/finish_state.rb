@@ -1,4 +1,3 @@
-require 'sdl2'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
 require_relative '../layout'

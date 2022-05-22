@@ -1,4 +1,3 @@
-require 'sdl2'
 require_relative '../layout'
 require_relative '../../system/image'
 
