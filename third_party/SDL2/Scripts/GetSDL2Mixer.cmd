@@ -9,7 +9,7 @@ setlocal EnableDelayedExpansion
 :: Build common variables
 set VERSION=%1
 if "%1"=="" (
-    set VERSION=2.0.4
+    set VERSION=2.6.0
 )
 set BASENAME=SDL2_mixer-!VERSION!-win32-x64
 set PACKAGE=!BASENAME!.zip
@@ -23,7 +23,7 @@ if not exist ..\Archives (
 
 :: Get SDL2_mixer package and then extract
 if not exist !PACKAGE! (
-    curl https://www.libsdl.org/projects/SDL_mixer/release/!PACKAGE! -o ../Archives/!PACKAGE!
+    curl -L https://github.com/libsdl-org/SDL_mixer/releases/download/release-!VERSION!/!PACKAGE! -o ../Archives/!PACKAGE!
     if !ERRORLEVEL! neq 0 goto error
 )
 

@@ -9,7 +9,7 @@ setlocal EnableDelayedExpansion
 :: Build common variables
 set VERSION=%1
 if "%1"=="" (
-    set VERSION=2.0.18
+    set VERSION=2.20.0
 )
 set BASENAME=SDL2_ttf-!VERSION!-win32-x64
 set PACKAGE=!BASENAME!.zip
