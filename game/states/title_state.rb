@@ -15,9 +15,13 @@ class TitleState < GameState
 
     @grass = services.get(:Grass)
     @background = services.get(:Background)
+
+    @title_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/Title.mp3', 'rb'), 1)
   end
 
   def cleanup
+    SDL.Mix_FreeMusic(@title_bgm)
+    @title_bgm = nil
     @grass = nil
     @background = nil
     super
@@ -25,10 +29,12 @@ class TitleState < GameState
 
   def enter(_prev_state_id)
     input.set_mapping(:title)
+    SDL.Mix_PlayMusic(@title_bgm, -1)
   end
 
   def leave(_next_state_id)
     input.unset_mapping
+    SDL.Mix_FadeOutMusic(30)
   end
 
   def update(dt)

@@ -304,6 +304,10 @@ class WhacAMole
     @prev_event != @current_event
   end
 
+  def current_event_symbol
+    @current_event[1]
+  end
+
   def setup(services)
   end
 

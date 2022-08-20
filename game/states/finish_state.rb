@@ -9,9 +9,14 @@ class FinishState < GameState
     @grass = services.get(:Grass)
     @mole = services.get(:Mole)
     @whacamole = services.get(:WhacAMole)
+
+    @finish_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Finish.wav', 'rb'), 1) # 1 == freesrc
   end
 
   def cleanup
+    SDL.Mix_FreeChunk(@finish_se)
+    @finish_se = nil
+
     @background = nil
     @grass = nil
     @mole = nil
@@ -25,6 +30,7 @@ class FinishState < GameState
     @flip_end = 0.125
     @time_current = 0.0
     @time_end = 2.0
+    SDL::Mix_PlayChannelTimed(-1, @finish_se, 0, -1)
   end
 
   def update(dt)

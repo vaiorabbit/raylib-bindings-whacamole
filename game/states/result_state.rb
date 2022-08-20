@@ -17,9 +17,13 @@ class ResultState < GameState
     @grass = services.get(:Grass)
     @background = services.get(:Background)
     @whacamole = services.get(:WhacAMole)
+
+    @gameover_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/GameOver.mp3', 'rb'), 1)
   end
 
   def cleanup
+    SDL.Mix_FreeMusic(@gameover_bgm)
+    @gameover_bgm = nil
     @grass = nil
     @background = nil
     @whacamole = nil
@@ -33,10 +37,12 @@ class ResultState < GameState
     @time_current = 0.0
     @time_end = 2.0
     input.set_mapping(:result)
+    SDL.Mix_PlayMusic(@gameover_bgm, 0)
   end
 
   def leave(_next_state_id)
     input.unset_mapping
+    SDL.Mix_HaltMusic()
   end
 
   def update(dt)

@@ -34,9 +34,23 @@ class MainState < GameState
     @grass = services.get(:Grass)
     @background = services.get(:Background)
     @effects = services.get(:HitEffects)
+
+    @hit_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Hit.wav', 'rb'), 1) # 1 == freesrc
+    @swing_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/swing2.wav', 'rb'), 1) # 1 == freesrc
+    @appear_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Appear.wav', 'rb'), 1) # 1 == freesrc
+
+    @main_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/Main.mp3', 'rb'), 1)
   end
 
   def cleanup
+    SDL.Mix_FreeMusic(@main_bgm)
+    SDL.Mix_FreeChunk(@appear_se)
+    SDL.Mix_FreeChunk(@swing_se)
+    SDL.Mix_FreeChunk(@hit_se)
+    @main_bgm = nil
+    @appear_se = nil
+    @swing_se = nil
+    @hit_se = nil
     @whacamole = nil
     @hammer = nil
     @mole = nil
@@ -53,27 +67,41 @@ class MainState < GameState
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
     @hammer.down = false
     @effects.hide
+    SDL.Mix_PlayMusic(@main_bgm, -1) unless _prev_state_id == :pause
   end
 
   def leave(_next_state_id)
     @screenshot.capture
     input.unset_mapping
+    SDL.Mix_FadeOutMusic(500) unless _next_state_id == :pause
   end
 
   def update(dt)
     @whacamole.update(dt)
 
+    if @whacamole.event_triggered? && @whacamole.current_event_symbol == :event_appear
+      SDL::Mix_PlayChannelTimed(-1, @appear_se, 0, -1)
+    end
+
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
     @hammer.down = (input.mouse_down? :hammer_attack)
 
     if input.mouse_trigger? :hammer_attack
+      SDL::Mix_PlayChannelTimed(-1, @swing_se, 0, -1)
+      hit = false
       @whacamole.moles_status.each do |status|
         if status.hit_detection_active? && status.overlap_with_circle?(input.mouse_pos_x, input.mouse_pos_y, @cursor_circle.radius)
           @whacamole.add_score(1)
           status.go_down
           @effects.play(input.mouse_pos_x, input.mouse_pos_y)
+          hit = true
         end
       end
+      if hit
+        @effects.play(input.mouse_pos_x, input.mouse_pos_y)
+        SDL::Mix_PlayChannelTimed(-1, @hit_se, 0, -1)
+      end
+
     end
 
     @effects.update(dt)

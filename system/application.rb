@@ -41,7 +41,7 @@ class Application
     SDL.Init(SDL::INIT_TIMER | SDL::INIT_AUDIO | SDL::INIT_VIDEO | SDL::INIT_GAMECONTROLLER)
     SDL.IMG_Init(SDL::IMG_INIT_PNG)
     SDL.TTF_Init()
-    SDL.Mix_Init(SDL::MIX_INIT_MP3 | SDL::MIX_INIT_OGG)
+    SDL.Mix_Init(SDL::MIX_INIT_MP3)
     SDL.Mix_OpenAudio(SDL::MIX_DEFAULT_FREQUENCY, SDL::MIX_DEFAULT_FORMAT, SDL::MIX_DEFAULT_CHANNELS, 4096)
 
     @window = SDL.CreateWindow(@title, 32, 32, @screen_width, @screen_height, 0)

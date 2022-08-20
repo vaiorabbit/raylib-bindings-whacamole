@@ -13,9 +13,13 @@ class PauseState < GameState
     mapping.register_mouse(:resume_game, SDL::BUTTON_LEFT, repeat_enabled: false)
     input.register_mapping(mapping)
     @screenshot = services.get(:ScreenShot)
+
+    @pause_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Pause.wav', 'rb'), 1) # 1 == freesrc
   end
 
   def cleanup
+    SDL.Mix_FreeChunk(@pause_se)
+    @pause_se = nil
     @screenshot = nil
     super
   end
@@ -28,6 +32,7 @@ class PauseState < GameState
     @time_end = 2.0
 
     input.set_mapping(:pause)
+    SDL::Mix_PlayChannelTimed(-1, @pause_se, 0, -1)
     @prev_state_id = _prev_state_id
   end
 
