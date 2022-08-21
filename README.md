@@ -7,6 +7,12 @@
 
 <img src="https://raw.githubusercontent.com/vaiorabbit/sdl2-bindings-whacamole/main/doc/screenshot_00.png" width="300"> <img src="https://raw.githubusercontent.com/vaiorabbit/sdl2-bindings-whacamole/main/doc/screenshot_01.png" width="300">
 
+Demonstration on how to use [Ruby SDL2 bindings](https://github.com/vaiorabbit/sdl2-bindings) (<https://github.com/vaiorabbit/sdl2-bindings>)
+
+*   Movie : Whac-a-Mole! : Ruby SDL2 bindings demo 
+    *   [![](http://img.youtube.com/vi/HroP-_EWcg8/mqdefault.jpg)](https://www.youtube.com/watch?v=HroP-_EWcg8)
+
+
 ## Usage ##
 
 *   Prepare SDL, SDL_Image, SDL_Mixer
