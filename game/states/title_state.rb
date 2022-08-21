@@ -1,6 +1,7 @@
 require 'sdl2'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
+require_relative '../../system/sound'
 
 class TitleState < GameState
   def setup(services)
@@ -16,11 +17,11 @@ class TitleState < GameState
     @grass = services.get(:Grass)
     @background = services.get(:Background)
 
-    @title_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/Title.mp3', 'rb'), 1)
+    @title_bgm = Sound::Bgm.new('asset/sound/Title.mp3').setup
   end
 
   def cleanup
-    SDL.Mix_FreeMusic(@title_bgm)
+    @title_bgm.cleanup
     @title_bgm = nil
     @grass = nil
     @background = nil
@@ -29,7 +30,7 @@ class TitleState < GameState
 
   def enter(_prev_state_id)
     input.set_mapping(:title)
-    SDL.Mix_PlayMusic(@title_bgm, -1)
+    @title_bgm.play
   end
 
   def leave(_next_state_id)

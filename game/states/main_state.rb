@@ -3,6 +3,7 @@ require_relative '../../system/draw'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
 require_relative '../../system/screenshot'
+require_relative '../../system/sound'
 require_relative '../objects/hammer'
 require_relative '../objects/mole'
 require_relative '../layout'
@@ -35,18 +36,18 @@ class MainState < GameState
     @background = services.get(:Background)
     @effects = services.get(:HitEffects)
 
-    @hit_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Hit.wav', 'rb'), 1) # 1 == freesrc
-    @swing_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/swing2.wav', 'rb'), 1) # 1 == freesrc
-    @appear_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Appear.wav', 'rb'), 1) # 1 == freesrc
+    @hit_se = Sound::Sefx.new('asset/sound/Hit.wav').setup
+    @swing_se = Sound::Sefx.new('asset/sound/swing2.wav').setup
+    @appear_se = Sound::Sefx.new('asset/sound/Appear.wav').setup
 
-    @main_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/Main.mp3', 'rb'), 1)
+    @main_bgm = Sound::Bgm.new('asset/sound/Main.mp3').setup
   end
 
   def cleanup
-    SDL.Mix_FreeMusic(@main_bgm)
-    SDL.Mix_FreeChunk(@appear_se)
-    SDL.Mix_FreeChunk(@swing_se)
-    SDL.Mix_FreeChunk(@hit_se)
+    @main_bgm.cleanup
+    @appear_se.cleanup
+    @swing_se.cleanup
+    @hit_se.cleanup
     @main_bgm = nil
     @appear_se = nil
     @swing_se = nil
@@ -67,27 +68,27 @@ class MainState < GameState
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
     @hammer.down = false
     @effects.hide
-    SDL.Mix_PlayMusic(@main_bgm, -1) unless _prev_state_id == :pause
+    @main_bgm.play unless _prev_state_id == :pause
   end
 
   def leave(_next_state_id)
     @screenshot.capture
     input.unset_mapping
-    SDL.Mix_FadeOutMusic(500) unless _next_state_id == :pause
+    Sound::Bgm.fadeout(ms: 500) unless _next_state_id == :pause
   end
 
   def update(dt)
     @whacamole.update(dt)
 
     if @whacamole.event_triggered? && @whacamole.current_event_symbol == :event_appear
-      SDL::Mix_PlayChannelTimed(-1, @appear_se, 0, -1)
+      @appear_se.play
     end
 
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
     @hammer.down = (input.mouse_down? :hammer_attack)
 
     if input.mouse_trigger? :hammer_attack
-      SDL::Mix_PlayChannelTimed(-1, @swing_se, 0, -1)
+      @swing_se.play
       hit = false
       @whacamole.moles_status.each do |status|
         if status.hit_detection_active? && status.overlap_with_circle?(input.mouse_pos_x, input.mouse_pos_y, @cursor_circle.radius)
@@ -99,7 +100,7 @@ class MainState < GameState
       end
       if hit
         @effects.play(input.mouse_pos_x, input.mouse_pos_y)
-        SDL::Mix_PlayChannelTimed(-1, @hit_se, 0, -1)
+        @hit_se.play
       end
 
     end

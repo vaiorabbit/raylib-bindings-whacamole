@@ -1,6 +1,7 @@
 require 'sdl2'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
+require_relative '../../system/sound'
 
 class PauseState < GameState
   def setup(services)
@@ -14,11 +15,11 @@ class PauseState < GameState
     input.register_mapping(mapping)
     @screenshot = services.get(:ScreenShot)
 
-    @pause_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Pause.wav', 'rb'), 1) # 1 == freesrc
+    @pause_se = Sound::Sefx.new('asset/sound/Pause.wav').setup
   end
 
   def cleanup
-    SDL.Mix_FreeChunk(@pause_se)
+    @pause_se.cleanup
     @pause_se = nil
     @screenshot = nil
     super
@@ -32,7 +33,7 @@ class PauseState < GameState
     @time_end = 2.0
 
     input.set_mapping(:pause)
-    SDL::Mix_PlayChannelTimed(-1, @pause_se, 0, -1)
+    @pause_se.play
     @prev_state_id = _prev_state_id
   end
 

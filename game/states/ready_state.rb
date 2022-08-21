@@ -1,6 +1,7 @@
 require 'sdl2'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
+require_relative '../../system/sound'
 
 class ReadyState < GameState
   def setup(services)
@@ -9,11 +10,11 @@ class ReadyState < GameState
     @background = services.get(:Background)
     @whacamole = services.get(:WhacAMole)
 
-    @ready_bgm = SDL.Mix_LoadMUS_RW(SDL.RWFromFile('asset/sound/Ready.mp3', 'rb'), 1)
+    @ready_bgm = Sound::Bgm.new('asset/sound/Ready.mp3').setup
   end
 
   def cleanup
-    SDL.Mix_FreeMusic(@ready_bgm)
+    @ready_bgm.cleanup
     @ready_bgm = nil
     @grass = nil
     @background = nil
@@ -28,11 +29,11 @@ class ReadyState < GameState
     @time_end = 3.0
 
     @whacamole.reset
-    SDL.Mix_PlayMusic(@ready_bgm, 0)
+    @ready_bgm.play(do_loop: false)
   end
 
   def leave(_next_state_id)
-    SDL.Mix_HaltMusic()
+    Sound::Bgm.halt
   end
 
   def update(dt)

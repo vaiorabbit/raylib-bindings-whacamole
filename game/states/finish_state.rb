@@ -1,5 +1,6 @@
 require_relative '../../system/game_state'
 require_relative '../../system/input'
+require_relative '../../system/sound'
 require_relative '../layout'
 
 class FinishState < GameState
@@ -10,11 +11,11 @@ class FinishState < GameState
     @mole = services.get(:Mole)
     @whacamole = services.get(:WhacAMole)
 
-    @finish_se = SDL.Mix_LoadWAV_RW(SDL.RWFromFile('asset/sound/Finish.wav', 'rb'), 1) # 1 == freesrc
+    @finish_se = Sound::Sefx.new('asset/sound/Finish.wav').setup
   end
 
   def cleanup
-    SDL.Mix_FreeChunk(@finish_se)
+    @finish_se.cleanup
     @finish_se = nil
 
     @background = nil
@@ -30,7 +31,7 @@ class FinishState < GameState
     @flip_end = 0.125
     @time_current = 0.0
     @time_end = 2.0
-    SDL::Mix_PlayChannelTimed(-1, @finish_se, 0, -1)
+    @finish_se.play
   end
 
   def update(dt)
