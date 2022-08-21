@@ -9,13 +9,15 @@ require_relative 'timer'
 require_relative 'util'
 
 class Application
-  attr_reader :title, :screen_width, :screen_height, :end_main
+  attr_reader :title, :screen_width, :screen_height, :screen_x, :screen_y, :end_main
 
-  def initialize(title: '', screen_width: 800, screen_height: 600,
+  def initialize(title: '', screen_width: 800, screen_height: 600, screen_x: 32, screen_y: 32,
                  clear_r: 192, clear_g: 192, clear_b: 255, clear_a: 255)
     @title = title
     @screen_width = screen_width
     @screen_height = screen_height
+    @screen_x = screen_x
+    @screen_y = screen_y
     @clear_r = clear_r
     @clear_g = clear_g
     @clear_b = clear_b
@@ -44,7 +46,7 @@ class Application
     SDL.Mix_Init(SDL::MIX_INIT_MP3)
     SDL.Mix_OpenAudio(SDL::MIX_DEFAULT_FREQUENCY, SDL::MIX_DEFAULT_FORMAT, SDL::MIX_DEFAULT_CHANNELS, 4096)
 
-    @window = SDL.CreateWindow(@title, 32, 32, @screen_width, @screen_height, 0)
+    @window = SDL.CreateWindow(@title, @screen_x, @screen_y, @screen_width, @screen_height, 0)
 
     SDL.SetWindowGrab(@window, SDL::TRUE) # Restrict mouse cursor to window
 

@@ -5,6 +5,8 @@
 *   Created : 2022-05-22
 *   Last modified : 2022-08-21
 
+<img src="https://raw.githubusercontent.com/vaiorabbit/sdl2-bindings-whacamole/main/doc/screenshot_00.png" width="300"> <img src="https://raw.githubusercontent.com/vaiorabbit/sdl2-bindings-whacamole/main/doc/screenshot_01.png" width="300">
+
 ## Usage ##
 
 *   Prepare SDL, SDL_Image, SDL_Mixer
