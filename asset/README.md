@@ -1,6 +1,7 @@
-*   Hammer (pikopiko_hummer_up.png, pikopiko_hummer_down.png)
+*   Hammer (pikopiko_hammer_up.png, pikopiko_hammer_down.png)
     *   ピコピコハンマーのイラスト
         *   <https://www.irasutoya.com/2015/03/blog-post_91.html>
+        *   <https://3.bp.blogspot.com/-XbUscccVWqk/VPQTlBZbCsI/AAAAAAAAr-w/e1ERdjA4-xU/s800/pikopiko_hummer.png>
 *   Mole (animal_mogura_kouji2.png)
     *   もぐらのイラスト「道路工事」
         *   <https://www.irasutoya.com/2013/02/blog-post_9399.html>
