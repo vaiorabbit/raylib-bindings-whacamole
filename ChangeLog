@@ -1,3 +1,8 @@
+2022-08-29  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* Start porting to raylib
+	* Ported image.rb
+
 2022-08-21  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* Added BGM and Sound samples

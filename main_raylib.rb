@@ -12,6 +12,7 @@
 # * https://github.com/vaiorabbit/raylib-bindings/tree/main/examples for more actual codes written in Ruby
 
 require 'raylib'
+require_relative 'raylib/system/image'
 
 shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
 
@@ -57,6 +58,9 @@ if __FILE__ == $PROGRAM_NAME
   obstacle_cube_size = Vector3.create(2.0, 2.0, 2.0)
   obstacle_sphere_pos = Vector3.create(4.0, 0.0, 0.0)
   obstacle_sphere_size = 1.5
+
+  image = Image.new
+  image.setup('asset/effect/hit_effect.png')
 
   until WindowShouldClose()
     ### Update phase
@@ -139,8 +143,14 @@ if __FILE__ == $PROGRAM_NAME
       # FPS
       DrawFPS(screen_width - 100, 16)
 
+      image.x = 60
+      image.y = 60
+      image.render
+
     EndDrawing()
   end
+
+  image.cleanup
 
   CloseWindow()
 end
