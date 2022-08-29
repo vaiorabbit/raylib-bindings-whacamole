@@ -13,6 +13,7 @@
 
 require 'raylib'
 require_relative 'raylib/system/image'
+require_relative 'raylib/system/text'
 require_relative 'raylib/system/timer'
 
 shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
@@ -67,6 +68,8 @@ if __FILE__ == $PROGRAM_NAME
   game_timer.setup
   game_timer.start
 
+  Text.setup
+
   until WindowShouldClose()
     ### Update phase
 
@@ -115,6 +118,9 @@ if __FILE__ == $PROGRAM_NAME
     # Check collisions player vs obstacle_sphere
     collision = true if CheckCollisionBoxSphere(player_bbox, obstacle_sphere_pos, obstacle_sphere_size)
 
+    Text.set(0, 0, 'Hello', Raylib::RED)
+    Text.set(0, 16, 'World', Raylib::BLUE)
+
     ### Rendering phase
 
     BeginDrawing()
@@ -152,6 +158,8 @@ if __FILE__ == $PROGRAM_NAME
       image.y = 60
       image.render
 
+      Text.render
+
     EndDrawing()
 
     dt = game_timer.elapsed
@@ -160,6 +168,8 @@ if __FILE__ == $PROGRAM_NAME
   end
 
   image.cleanup
+
+  Text.cleanup
 
   CloseWindow()
 end
