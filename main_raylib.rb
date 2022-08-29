@@ -13,6 +13,7 @@
 
 require 'raylib'
 require_relative 'raylib/system/image'
+require_relative 'raylib/system/timer'
 
 shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
 
@@ -61,6 +62,10 @@ if __FILE__ == $PROGRAM_NAME
 
   image = Image.new
   image.setup('asset/effect/hit_effect.png')
+
+  game_timer = Timer.new
+  game_timer.setup
+  game_timer.start
 
   until WindowShouldClose()
     ### Update phase
@@ -148,6 +153,10 @@ if __FILE__ == $PROGRAM_NAME
       image.render
 
     EndDrawing()
+
+    dt = game_timer.elapsed
+    game_timer.start
+    # pp dt
   end
 
   image.cleanup
