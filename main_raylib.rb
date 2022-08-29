@@ -15,6 +15,7 @@ require 'raylib'
 require_relative 'raylib/system/image'
 require_relative 'raylib/system/text'
 require_relative 'raylib/system/timer'
+require_relative 'raylib/system/draw'
 
 shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
 
@@ -69,6 +70,8 @@ if __FILE__ == $PROGRAM_NAME
   game_timer.start
 
   Text.setup
+
+  circle = Circle::Cache.new(radius: 15.0, r: 255, g: 32, b: 32, a: 128)
 
   until WindowShouldClose()
     ### Update phase
@@ -159,6 +162,8 @@ if __FILE__ == $PROGRAM_NAME
       image.render
 
       Text.render
+
+      Circle.render(circle, 200, 200)
 
     EndDrawing()
 
