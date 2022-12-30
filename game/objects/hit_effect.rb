@@ -100,7 +100,7 @@ class HitEffects
     @hit_image = Image.new
   end
 
-  def setup(renderer)
+  def setup()
     @hit_image.setup('asset/effect/hit_effect.png')
     @hit_image.width = Layout.size(:hit_image)[0]
     @hit_image.height = Layout.size(:hit_image)[1]

@@ -13,7 +13,7 @@ class Hammer
     @down = false
   end
 
-  def setup(renderer, input)
+  def setup(input)
     @hammer_image_up.setup('asset/character/pikopiko_hammer_up.png')
     @hammer_image_up.width = Layout.size(:hammer_image)[0]
     @hammer_image_up.height = Layout.size(:hammer_image)[1]

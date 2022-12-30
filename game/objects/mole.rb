@@ -30,7 +30,7 @@ class Mole
     @mole_image.height = h
   end
 
-  def setup(renderer, input)
+  def setup(input)
     @mole_image.setup('asset/character/animal_mogura_kouji2.png')
     @original_width = Layout.size(:mole_image)[0]
     @original_height = Layout.size(:mole_image)[1]

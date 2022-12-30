@@ -3,24 +3,21 @@ require_relative 'services'
 class GameState
   attr_reader :state_id
   attr_accessor :manager
-  private attr_accessor :renderer, :input
+  private attr_accessor :input
 
   def initialize(state_id)
     raise ArgumentError unless state_id.is_a? Symbol
 
     @state_id = state_id
     @manager = nil
-    @renderer = nil
     @input = nil
   end
 
   def setup(services)
-    @renderer = services.get(:Renderer)
     @input = services.get(:Input)
   end
 
   def cleanup
-    @renderer = nil
     @input = nil
   end
 
@@ -45,7 +42,6 @@ end
 # state_manager.register(MainState.new(:main))
 # state_manager.register(EndState.new(:end))
 # state_manager.initial_state_id = :title
-# state_manager.setup(renderer, input)
 # state_manager.start
 # until end_game do
 #   state_manager.update(dt) # some state may set REQUEST_EXIT here

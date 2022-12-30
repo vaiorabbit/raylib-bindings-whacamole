@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
 require_relative '../../system/sound'
@@ -50,8 +50,8 @@ class TitleState < GameState
     @background.render_background()
     @grass.render_per_hole()
 
-    Text.set(32, 180, "           Whac-a-Mole!\n     Ruby SDL2-Bindings demo", Raylib::BLUE)
+    Text.set(32, 180, "           Whac-a-Mole!\n    Ruby raylib-bindings demo", Raylib::BLUE)
     Text.set(32, 300, "  Click or press SPACE to start\n         Press ESC to exit", Raylib::RED)
-    Text.set(32, 440, "         2022 vaiorabbit", Raylib::WHITE)
+    Text.set(32, 440, "       2022-2023 vaiorabbit", Raylib::WHITE)
   end
 end

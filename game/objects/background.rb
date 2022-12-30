@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../layout'
 require_relative '../../system/image'
 
@@ -10,7 +10,7 @@ class Background
   def width = @background_image.width
   def height = @background_image.height
 
-  def setup(renderer)
+  def setup()
     @background_image.setup('asset/field/background.png')
     @background_image.width = Layout.size(:background_image)[0]
     @background_image.height = Layout.size(:background_image)[1]

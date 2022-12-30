@@ -17,7 +17,7 @@ require_relative 'game/states/finish_state'
 require_relative 'game/states/result_state'
 
 if __FILE__ == $PROGRAM_NAME
-  app = Application.new(title: "Whac-a-Mole! : Ruby SDL2 bindings demo",
+  app = Application.new(title: "Whac-a-Mole! : Ruby raylib bindings demo",
                         screen_width: Layout.size(:screen)[0], screen_height: Layout.size(:screen)[1],
                         clear_r: 140, clear_g: 200, clear_b: 90, clear_a: 255)
 
@@ -36,10 +36,10 @@ if __FILE__ == $PROGRAM_NAME
     # - ":Renderer (pointer to SDL_Renderer)" and
     # - ":Input (instance of system/input)"
     # are provided by the system and always available by default.
-    services.register(:Hammer, Hammer.new.setup(services.get(:Renderer), services.get(:Input)))
+    services.register(:Hammer, Hammer.new.setup(services.get(:Input)))
     services.register(:CursorCircle, Circle::Cache.new(radius: 15.0, r: 255, g: 32, b: 32, a: 128))
 
-    mole = Mole.new.setup(services.get(:Renderer), services.get(:Input))
+    mole = Mole.new.setup(services.get(:Input))
     services.register(:Mole, mole)
 
     row, col = 3, 3
@@ -57,9 +57,9 @@ if __FILE__ == $PROGRAM_NAME
     end
     services.register(:WhacAMole, whacamole)
 
-    services.register(:Grass, Grass.new.setup(services.get(:Renderer), whacamole))
-    services.register(:Background, Background.new.setup(services.get(:Renderer)))
-    services.register(:HitEffects, HitEffects.new.setup(services.get(:Renderer)))
+    services.register(:Grass, Grass.new.setup(whacamole))
+    services.register(:Background, Background.new.setup())
+    services.register(:HitEffects, HitEffects.new.setup())
   end
 
   app.setup(setup_func)

@@ -9,7 +9,7 @@ class Grass
   def grass_width = @grass_image.width
   def grass_height = @grass_image.height
 
-  def setup(renderer, whacamole)
+  def setup(whacamole)
     @whacamole = whacamole
     @grass_image.setup('asset/field/kusa_simple4.png')
     @grass_image.width = Layout.size(:grass_image)[0]

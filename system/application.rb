@@ -34,9 +34,7 @@ class Application
     @end_main = false
 
     @window = nil
-    @renderer = nil
 
-    #@screenshot = ScreenShot.new(width: @screen_width, height: @screen_height)
     @input = Input.new
     @state_manager = GameStateManager.new
 
@@ -49,35 +47,17 @@ class Application
   end
 
   def setup(setup_func = nil)
-    # SDL.Init(SDL::INIT_TIMER | SDL::INIT_AUDIO | SDL::INIT_VIDEO | SDL::INIT_GAMECONTROLLER)
-    # SDL.IMG_Init(SDL::IMG_INIT_PNG)
-    # SDL.TTF_Init()
-    # SDL.Mix_Init(SDL::MIX_INIT_MP3)
-    # SDL.Mix_OpenAudio(SDL::MIX_DEFAULT_FREQUENCY, SDL::MIX_DEFAULT_FORMAT, SDL::MIX_DEFAULT_CHANNELS, 4096)
-
     Raylib.InitWindow(@screen_width, @screen_height, @title)
-
     Raylib.InitAudioDevice()
 
-    # @window = SDL.CreateWindow(@title, @screen_x, @screen_y, @screen_width, @screen_height, 0)
-
-    # SDL.SetWindowGrab(@window, SDL::TRUE) # Restrict mouse cursor to window
-
-    # @renderer = SDL.CreateRenderer(@window, -1, SDL::RENDERER_PRESENTVSYNC)
-    @renderer = nil
-
     Text.setup()
-
-    # @screenshot.setup(@renderer)
 
     @input.setup
     @input.screen_width = @screen_width
     @input.screen_height = @screen_height
 
     @services.setup
-    @services.register_external(:Renderer, @renderer)
     @services.register_external(:Input, @input)
-    # @services.register_external(:ScreenShot, @screenshot)
 
     setup_func&.call(@services)
 
@@ -90,15 +70,8 @@ class Application
     @state_manager.cleanup
     @services.cleanup
     @input.cleanup
-    # @screenshot.cleanup
+
     Text.cleanup()
-    # SDL.DestroyRenderer(@renderer)
-    # SDL.SetWindowGrab(@window, SDL::FALSE)
-    # SDL.DestroyWindow(@window)
-    # SDL.Mix_Quit()
-    # SDL.IMG_Quit()
-    # SDL.TTF_Quit()
-    # SDL.Quit()
 
     Raylib.CloseAudioDevice()
     Raylib.CloseWindow()
@@ -119,24 +92,13 @@ class Application
       @state_manager.update(dt)
 
       Raylib.BeginDrawing()
-
         Raylib.ClearBackground(Raylib::Color.from_u8(@clear_r, @clear_g, @clear_b, @clear_a))
-
         @state_manager.render
-
         Text.render
-
       Raylib.EndDrawing()
 
       dt = game_timer.elapsed
       game_timer.start
-
-      # SDL.SetRenderDrawBlendMode(@renderer, SDL::BLENDMODE_BLEND)
-      # SDL.SetRenderDrawColor(@renderer, @clear_r, @clear_g, @clear_b, @clear_a)
-      # SDL.RenderClear(@renderer)
-      # @state_manager.render
-      # Text.render(@renderer)
-      # SDL.RenderPresent(@renderer)
 
       @end_main = true if (@state_manager.state_request & GameStateManager::STATE_REQUEST_EXIT) != 0
     end
