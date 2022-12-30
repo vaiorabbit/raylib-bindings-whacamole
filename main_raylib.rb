@@ -16,6 +16,7 @@ require_relative 'raylib/system/image'
 require_relative 'raylib/system/text'
 require_relative 'raylib/system/timer'
 require_relative 'raylib/system/draw'
+require_relative 'raylib/system/sound'
 
 shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
 
@@ -65,16 +66,34 @@ if __FILE__ == $PROGRAM_NAME
   image = Image.new
   image.setup('asset/effect/hit_effect.png')
 
-  game_timer = Timer.new
-  game_timer.setup
-  game_timer.start
-
   Text.setup
 
   circle = Circle::Cache.new(radius: 15.0, r: 255, g: 32, b: 32, a: 128)
 
+  InitAudioDevice()
+#  bgm = Sound::Bgm.new('asset/sound/GameOver.mp3').setup
+  bgm = Sound::Bgm.new('asset/sound/Main.mp3').setup
+  sefx = Sound::Sefx.new('asset/sound/swing2.wav').setup
+
+  game_timer = Timer.new
+  game_timer.setup
+  game_timer.start
+
+  dt = 0.0
+
   until WindowShouldClose()
     ### Update phase
+
+    Sound::Bgm.update(dt)
+    if IsKeyPressed(KEY_S)
+      Sound::Bgm.play(bgm, do_loop: true)
+    end
+    if IsKeyPressed(KEY_F)
+      Sound::Bgm.fadeout(sec: 1.0)
+    end
+    if IsKeyPressed(KEY_H)
+      sefx.play
+    end
 
     # Reset camera settings
     if IsKeyPressed(KEY_F1)
@@ -169,12 +188,15 @@ if __FILE__ == $PROGRAM_NAME
 
     dt = game_timer.elapsed
     game_timer.start
-    # pp dt
   end
+
+  sefx.cleanup
+  bgm.cleanup
 
   image.cleanup
 
   Text.cleanup
 
+  CloseAudioDevice()
   CloseWindow()
 end
