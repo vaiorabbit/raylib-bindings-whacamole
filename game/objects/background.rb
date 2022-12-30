@@ -11,7 +11,7 @@ class Background
   def height = @background_image.height
 
   def setup(renderer)
-    @background_image.setup('asset/field/background.png', renderer)
+    @background_image.setup('asset/field/background.png')
     @background_image.width = Layout.size(:background_image)[0]
     @background_image.height = Layout.size(:background_image)[1]
     self
@@ -24,13 +24,13 @@ class Background
   def update(dt)
   end
 
-  def render_background(renderer)
-    @background_image.render(renderer)
+  def render_background()
+    @background_image.render()
   end
 
   def render_ui(renderer, score, time_left)
-    Text.set(Layout.position(:score_header)[0], Layout.position(:score_header)[1], "SCORE", Text::RED)
-    Text.set(Layout.position(:score_current)[0], Layout.position(:score_current)[1], score.to_s.rjust(5), Text::WHITE)
+    Text.set(Layout.position(:score_header)[0], Layout.position(:score_header)[1], "SCORE", Raylib::RED)
+    Text.set(Layout.position(:score_current)[0], Layout.position(:score_current)[1], score.to_s.rjust(5), Raylib::WHITE)
 
     SDL.SetRenderDrawColor(renderer, 0, 0, 0, 96)
     rect = SDL::Rect.new
@@ -40,7 +40,7 @@ class Background
     rect[:h] = Layout.size(:font)[1] * 3
     SDL.RenderFillRect(renderer, rect)
 
-    Text.set(Layout.position(:time_header)[0], Layout.position(:time_header)[1], "TIME", Text::RED)
+    Text.set(Layout.position(:time_header)[0], Layout.position(:time_header)[1], "TIME", Raylib::RED)
     Text.set(Layout.position(:time_current)[0], Layout.position(:time_current)[1], "#{('%2.3f' % time_left).rjust(6)}", Text::WHITE)
 
     rect[:x] = Layout.position(:time_current)[0] - Layout.size(:font)[0] / 2

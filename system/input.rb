@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 
 class KeyStatus
   attr_accessor :down, :prev_down, :trigger, :release, :repeat, :repeat_count
@@ -91,13 +91,13 @@ end
 
 class GamePad
   # Axis symbols
-  AXIS_LEFTX = SDL::CONTROLLER_AXIS_LEFTX
-  AXIS_LEFTY = SDL::CONTROLLER_AXIS_LEFTY
-  AXIS_RIGHTX = SDL::CONTROLLER_AXIS_RIGHTX
-  AXIS_RIGHTY = SDL::CONTROLLER_AXIS_RIGHTY
-  AXIS_TRIGGERLEFT = SDL::CONTROLLER_AXIS_TRIGGERLEFT
-  AXIS_TRIGGERRIGHT = SDL::CONTROLLER_AXIS_TRIGGERRIGHT
-  AXIS_MAX = SDL::CONTROLLER_AXIS_MAX
+  AXIS_LEFTX = Raylib::GAMEPAD_AXIS_LEFT_X
+  AXIS_LEFTY = Raylib::GAMEPAD_AXIS_LEFT_Y
+  AXIS_RIGHTX = Raylib::GAMEPAD_AXIS_RIGHT_X
+  AXIS_RIGHTY = Raylib::GAMEPAD_AXIS_RIGHT_Y
+  AXIS_TRIGGERLEFT = Raylib::GAMEPAD_AXIS_LEFT_TRIGGER
+  AXIS_TRIGGERRIGHT = Raylib::GAMEPAD_AXIS_RIGHT_TRIGGER
+  AXIS_MAX = 6
 
   attr_reader :game_controller, :gamepad_id
 
@@ -124,89 +124,89 @@ end
 
 class InputMapping
   attr_reader :name
-  attr_accessor :sdl_key_map,    :name_key_map
-  attr_accessor :sdl_mouse_map,  :name_mouse_map
-  attr_accessor :sdl_button_map, :name_button_map
-  attr_accessor :sdl_axis_map,   :name_axis_map
+  attr_accessor :raylib_key_map,    :name_key_map
+  attr_accessor :raylib_mouse_map,  :name_mouse_map
+  attr_accessor :raylib_button_map, :name_button_map
+  attr_accessor :raylib_axis_map,   :name_axis_map
 
   def initialize(name)
     @name = name
 
-    @sdl_key_map = {}
+    @raylib_key_map = {}
     @name_key_map = {}
 
-    @sdl_mouse_map = {}
+    @raylib_mouse_map = {}
     @name_mouse_map = {}
 
-    @sdl_button_map = {}
+    @raylib_button_map = {}
     @name_button_map = {}
 
-    @sdl_axis_map = {}
+    @raylib_axis_map = {}
     @name_axis_map = {}
   end
 
-  def register_key(name, sdlkey, repeat_enabled: false, repeat_start: 0, repeat_interval: 0)
-    raise RuntimeError "SDL key #{sdlkey} is already registered" if @sdl_key_map.key? sdlkey
+  def register_key(name, raylibkey, repeat_enabled: false, repeat_start: 0, repeat_interval: 0)
+    raise RuntimeError "Raylib key #{raylibkey} is already registered" if @raylib_key_map.key? raylibkey
     raise RuntimeError "Name symbol #{name} is already used at somewhere else" if @name_key_map.key? name
 
-    @sdl_key_map[sdlkey] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
-    @name_key_map[name] = @sdl_key_map[sdlkey]
+    @raylib_key_map[raylibkey] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
+    @name_key_map[name] = @raylib_key_map[raylibkey]
   end
 
   def unregister_key(name)
-    @sdl_key_map.delete_if { |_, value| value == @name_key_map[name] }
+    @raylib_key_map.delete_if { |_, value| value == @name_key_map[name] }
     @name_key_map.delete(name)
   end
 
-  def register_mouse(name, sdl_mousebutton, repeat_enabled: false, repeat_start: 0, repeat_interval: 0)
-    raise RuntimeError "SDL mouse button #{sdl_mousebutton} is already registered" if @sdl_mouse_map.key? sdl_mousebutton
+  def register_mouse(name, raylib_mousebutton, repeat_enabled: false, repeat_start: 0, repeat_interval: 0)
+    raise RuntimeError "Raylib mouse button #{raylib_mousebutton} is already registered" if @raylib_mouse_map.key? raylib_mousebutton
     raise RuntimeError "Name symbol #{name} is already used at somewhere else" if @name_mouse_map.key? name
 
-    @sdl_mouse_map[sdl_mousebutton] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
-    @name_mouse_map[name] = @sdl_mouse_map[sdl_mousebutton]
+    @raylib_mouse_map[raylib_mousebutton] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
+    @name_mouse_map[name] = @raylib_mouse_map[raylib_mousebutton]
   end
 
   def unregister_mouse(name)
-    @sdl_mouse_map.delete_if { |_, value| value == @name_mouse_map[name] }
+    @raylib_mouse_map.delete_if { |_, value| value == @name_mouse_map[name] }
     @name_mouse_map.delete(name)
   end
 
-  def register_button(name, sdl_button, repeat_enabled: false, repeat_start: 0, repeat_interval: 0, gamepad_id: 0)
-    @sdl_button_map[gamepad_id] ||= {}
+  def register_button(name, raylib_button, repeat_enabled: false, repeat_start: 0, repeat_interval: 0, gamepad_id: 0)
+    @raylib_button_map[gamepad_id] ||= {}
     @name_button_map[gamepad_id] ||= {}
 
-    @sdl_button_map[gamepad_id][sdl_button] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
-    @name_button_map[gamepad_id][name] = @sdl_button_map[gamepad_id][sdl_button]
+    @raylib_button_map[gamepad_id][raylib_button] = KeyStatus.new(repeat_enabled, repeat_start, repeat_interval)
+    @name_button_map[gamepad_id][name] = @raylib_button_map[gamepad_id][raylib_button]
   end
 
   def unregister_button(name, gamepad_id: 0)
-    @sdl_button_map[gamepad_id].delete_if { |_, value| value == @name_button_map[gamepad_id][name] }
+    @raylib_button_map[gamepad_id].delete_if { |_, value| value == @name_button_map[gamepad_id][name] }
     @name_button_map[gamepad_id].delete(name)
   end
 
-  def register_axis(name, sdl_axis, handle_as_button: false, button_direction: :both, button_threshold: 10_000, repeat_enabled: false, repeat_start: 0, repeat_interval: 0, gamepad_id: 0)
-    @sdl_axis_map[gamepad_id] ||= {}
+  def register_axis(name, raylib_axis, handle_as_button: false, button_direction: :both, button_threshold: 10_000, repeat_enabled: false, repeat_start: 0, repeat_interval: 0, gamepad_id: 0)
+    @raylib_axis_map[gamepad_id] ||= {}
     @name_axis_map[gamepad_id] ||= {}
 
-    @sdl_axis_map[gamepad_id][sdl_axis] ||= {}
+    @raylib_axis_map[gamepad_id][raylib_axis] ||= {}
 
-    @sdl_axis_map[gamepad_id][sdl_axis][button_direction] =
+    @raylib_axis_map[gamepad_id][raylib_axis][button_direction] =
       AxisStatus.new(handle_as_button, button_direction, button_threshold, repeat_enabled:, repeat_start:, repeat_interval:)
-    @name_axis_map[gamepad_id][name] = @sdl_axis_map[gamepad_id][sdl_axis][button_direction]
+    @name_axis_map[gamepad_id][name] = @raylib_axis_map[gamepad_id][raylib_axis][button_direction]
   end
 
   def unregister_axis(name, gamepad_id: 0)
-    @sdl_axis_map[gamepad_id].delete(@name_axis_map[gamepad_id][name])
+    @raylib_axis_map[gamepad_id].delete(@name_axis_map[gamepad_id][name])
     @name_axis_map[gamepad_id].delete(name)
   end
 
   def clear_flags
-    @sdl_key_map.each_value { |map| map.clear_flags }
-    @sdl_mouse_map.each_value { |map| map.clear_flags }
-    @sdl_button_map.each_value do |gamepad_to_button_map|
+    @raylib_key_map.each_value { |map| map.clear_flags }
+    @raylib_mouse_map.each_value { |map| map.clear_flags }
+    @raylib_button_map.each_value do |gamepad_to_button_map|
       gamepad_to_button_map.each_value { |map| map.clear_flags }
     end
-    @sdl_axis_map.each_value do |gamepad_to_axis_map|
+    @raylib_axis_map.each_value do |gamepad_to_axis_map|
       gamepad_to_axis_map.each_value do |axis_to_direction_map|
         axis_to_direction_map.each_value {|map| map.clear_flags }
       end
@@ -254,17 +254,13 @@ class Input
   end
 
   def setup
-    # [NOTE] To handle SDL::CONTROLLERBUTTON* and SDL::CONTROLLERMOTION events properly, run SDL.GameControllerAddMapping
     # curl -O https://raw.githubusercontent.com/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt
     return unless File.exist?('system/gamecontrollerdb.txt')
 
-    SDL.GameControllerAddMapping(File.read('system/gamecontrollerdb.txt'))
+    Raylib.SetGamepadMappings(File.read('system/gamecontrollerdb.txt'))
   end
 
   def cleanup
-    @active_gamepads.each_value do |gamepad|
-      SDL.GameControllerClose(gamepad.game_controller)
-    end
   end
 
   def prepare_event
@@ -272,91 +268,62 @@ class Input
     @mouse_rel_y = 0
   end
 
-  def handle_event(event)
-    case event[:common][:type]
+  def handle_event
+    return if @current_mapping.nil?
 
-    when SDL::KEYDOWN
-      keysym = event[:key][:keysym][:sym]
-      repeat = event[:key][:repeat] != 0
-      if @current_mapping&.sdl_key_map&.key?(keysym) && !repeat
-        button = @current_mapping.sdl_key_map[keysym]
+    @current_mapping.raylib_key_map.each do |key, button|
+      key_pressed = Raylib.IsKeyPressed(key)
+      key_released = Raylib.IsKeyReleased(key)
+      if key_pressed or key_released
         button.prev_down = button.down
-        button.down = 1
+        button.down = key_pressed ? 1 : 0
       end
-    when SDL::KEYUP
-      keysym = event[:key][:keysym][:sym]
-      repeat = event[:key][:repeat] != 0
-      if @current_mapping&.sdl_key_map&.key?(keysym) && !repeat
-        button = @current_mapping.sdl_key_map[keysym]
-        button.prev_down = button.down
-        button.down = 0
-      end
+    end
 
-    when SDL::MOUSEBUTTONDOWN
-      from_touch_device = (event[:button][:which] == SDL::TOUCH_MOUSEID)
-      return if from_touch_device
-      mouse_button = event[:button][:button]
-      mouse_state = event[:button][:state]
-      if @current_mapping&.sdl_mouse_map&.key?(mouse_button)
-        button = @current_mapping.sdl_mouse_map[mouse_button]
+    @current_mapping.raylib_mouse_map.each do |key, button|
+      key_pressed = Raylib.IsMouseButtonPressed(key)
+      key_released = Raylib.IsMouseButtonReleased(key)
+      if key_pressed or key_released
         button.prev_down = button.down
-        button.down = 1
+        button.down = key_pressed ? 1 : 0
       end
-    when SDL::MOUSEBUTTONUP
-      from_touch_device = (event[:button][:which] == SDL::TOUCH_MOUSEID)
-      return if from_touch_device
-      mouse_button = event[:button][:button]
-      mouse_state = event[:button][:state]
-      if @current_mapping&.sdl_mouse_map&.key?(mouse_button)
-        button = @current_mapping.sdl_mouse_map[mouse_button]
-        button.prev_down = button.down
-        button.down = 0
-      end
-    when SDL::MOUSEMOTION
-      from_touch_device = (event[:motion][:which] == SDL::TOUCH_MOUSEID)
-      return if from_touch_device
-      @mouse_pos_x = event[:motion][:x]
-      @mouse_pos_y = event[:motion][:y]
-      @mouse_rel_x = event[:motion][:xrel]
-      @mouse_rel_y = event[:motion][:yrel]
+    end
 
-    when SDL::FINGERDOWN, SDL::FINGERUP, SDL::FINGERMOTION
-      @mouse_pos_x = event[:tfinger][:x] * @screen_width
-      @mouse_pos_y = event[:tfinger][:y] * @screen_height
-      @mouse_rel_x = event[:tfinger][:dx]
-      @mouse_rel_y = event[:tfinger][:dy]
+    mouse_pos = Raylib.GetMousePosition()
+    mouse_rel = Raylib.GetMouseDelta()
+    @mouse_pos_x = mouse_pos.x
+    @mouse_pos_y = mouse_pos.y
+    @mouse_rel_x = mouse_rel.x
+    @mouse_rel_y = mouse_rel.y
 
-    when SDL::CONTROLLERDEVICEADDED
-      gamepad_id = event[:cdevice][:which]
-      unless @active_gamepads.key? gamepad_id
-        @active_gamepads[gamepad_id] = GamePad.new(SDL.GameControllerOpen(gamepad_id), gamepad_id)
-      end
-    when SDL::CONTROLLERDEVICEREMOVED
-      gamepad_id = event[:cdevice][:which]
-      unless @active_gamepads.key? gamepad_id
-        SDL.GameControllerClose(gamepad_id)
-        @active_gamepads.delete(gamepad_id)
-      end
+    Raylib::MAX_GAMEPADS.times do |gamepad_id|
+      if Raylib.IsGamepadAvailable(gamepad_id)
+        unless @active_gamepads.key? gamepad_id
+          @active_gamepads[gamepad_id] = GamePad.new(gamepad_id, gamepad_id)
+        end
+        gamepad = @active_gamepads[gamepad_id]
 
-    when SDL::CONTROLLERAXISMOTION
-      gamepad_id = event[:caxis][:which]
-      gamepad = @active_gamepads[gamepad_id]
-      gamepad.set_axis_value(event[:caxis][:axis], event[:caxis][:value])
-    when SDL::CONTROLLERBUTTONDOWN
-      gamepad_id = event[:cbutton][:which]
-      sdl_button = event[:cbutton][:button]
-      if @current_mapping&.sdl_button_map[gamepad_id].key?(sdl_button)
-        button = @current_mapping.sdl_button_map[gamepad_id][sdl_button]
-        button.prev_down = button.down
-        button.down = 1
-      end
-    when SDL::CONTROLLERBUTTONUP
-      gamepad_id = event[:cbutton][:which]
-      sdl_button = event[:cbutton][:button]
-      if @current_mapping&.sdl_button_map[gamepad_id].key?(sdl_button)
-        button = @current_mapping.sdl_button_map[gamepad_id][sdl_button]
-        button.prev_down = button.down
-        button.down = 0
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_LEFT_X, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_LEFT_X))
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_LEFT_Y, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_LEFT_Y))
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_RIGHT_X, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_RIGHT_X))
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_RIGHT_Y, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_RIGHT_Y))
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_LEFT_TRIGGER, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_LEFT_TRIGGER))
+        gamepad.set_axis_value(Raylib::GAMEPAD_AXIS_RIGHT_TRIGGER, Raylib.GetGamepadAxisMovement(gamepad_id, Raylib::GAMEPAD_AXIS_RIGHT_TRIGGER))
+
+        if @current_mapping.raylib_button_map.key? gamepad_id
+          @current_mapping.raylib_button_map[gamepad_id].each do |key, button|
+            key_pressed = Raylib.IsGamepadButtonPressed(gamepad_id, key)
+            key_released = Raylib.IsGamepadButtonReleased(gamepad_id, key)
+            if key_pressed or key_released
+              button.prev_down = button.down
+              button.down = key_pressed ? 1 : 0
+            end
+          end
+        end
+      else
+        if @active_gamepads.key? gamepad_id
+          @active_gamepads.delete(gamepad_id)
+        end
       end
     end
   end
@@ -364,18 +331,18 @@ class Input
   def update
     return if @current_mapping.nil?
 
-    @current_mapping.sdl_key_map.each_value(&:update)
-    @current_mapping.sdl_mouse_map.each_value(&:update)
-    @current_mapping.sdl_button_map.each_value do |controller|
+    @current_mapping.raylib_key_map.each_value(&:update)
+    @current_mapping.raylib_mouse_map.each_value(&:update)
+    @current_mapping.raylib_button_map.each_value do |controller|
       controller.each_value(&:update)
     end
 
-    @current_mapping.sdl_axis_map.each do |gamepad_id, controller|
+    @current_mapping.raylib_axis_map.each do |gamepad_id, controller|
       next unless @active_gamepads.key? gamepad_id
 
-      controller.each do |sdl_axis, buttons|
+      controller.each do |raylib_axis, buttons|
         buttons.each_value do |button|
-          button.value = @active_gamepads[gamepad_id].get_axis_value(sdl_axis)
+          button.value = @active_gamepads[gamepad_id].get_axis_value(raylib_axis)
           button.update
         end
       end

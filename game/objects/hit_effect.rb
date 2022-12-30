@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../layout'
 require_relative '../../system/image'
 
@@ -101,10 +101,10 @@ class HitEffects
   end
 
   def setup(renderer)
-    @hit_image.setup('asset/effect/hit_effect.png', renderer)
+    @hit_image.setup('asset/effect/hit_effect.png')
     @hit_image.width = Layout.size(:hit_image)[0]
     @hit_image.height = Layout.size(:hit_image)[1]
-    SDL.SetTextureBlendMode(@hit_image.texture, SDL::BLENDMODE_BLEND)
+#    SDL.SetTextureBlendMode(@hit_image.texture, SDL::BLENDMODE_BLEND)
     @effects.each do |effect|
       effect.setup(@hit_image)
     end

@@ -5,17 +5,7 @@ require_relative 'input'
 require_relative 'services'
 require_relative 'text'
 require_relative 'timer'
-
-shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_path + '/lib/'
-
-case RUBY_PLATFORM
-when /mswin|msys|mingw|cygwin/
-  Raylib.load_lib(shared_lib_path + 'libraylib.dll', raygui_libpath: shared_lib_path + 'raygui.dll', physac_libpath: shared_lib_path + 'physac.dll')
-when /darwin/
-  Raylib.load_lib(shared_lib_path + 'libraylib.dylib', raygui_libpath: shared_lib_path + 'raygui.dylib', physac_libpath: shared_lib_path + 'physac.dylib')
-else
-  raise RuntimeError, "Unknown OS: #{RUBY_PLATFORM}"
-end
+require_relative 'util'
 
 class Application
   attr_reader :title, :screen_width, :screen_height, :screen_x, :screen_y, :end_main
@@ -36,7 +26,7 @@ class Application
     @window = nil
     @renderer = nil
 
-    #@screenshot = ScreenShot.new(width: @screen_width, height: @screen_height)
+    @screenshot = ScreenShot.new(width: @screen_width, height: @screen_height)
     @input = Input.new
     @state_manager = GameStateManager.new
 
@@ -55,7 +45,7 @@ class Application
     # SDL.Mix_Init(SDL::MIX_INIT_MP3)
     # SDL.Mix_OpenAudio(SDL::MIX_DEFAULT_FREQUENCY, SDL::MIX_DEFAULT_FORMAT, SDL::MIX_DEFAULT_CHANNELS, 4096)
 
-    Raylib.InitWindow(@screen_width, @screen_height, @title)
+    InitWindow(@screen_width, @screen_height, @title)
 
     # @window = SDL.CreateWindow(@title, @screen_x, @screen_y, @screen_width, @screen_height, 0)
 
@@ -64,7 +54,7 @@ class Application
     # @renderer = SDL.CreateRenderer(@window, -1, SDL::RENDERER_PRESENTVSYNC)
     @renderer = nil
 
-    Text.setup()
+    Text.setup(@renderer)
 
     # @screenshot.setup(@renderer)
 
@@ -109,20 +99,24 @@ class Application
     dt = 0.0
 
     until @end_main
-      @input.handle_event
+      input.handle_event
+      input.update
+
+      @input.prepare_event
+      @input.handle_event(event) while SDL.PollEvent(event) != 0
       @input.update
 
       @state_manager.update(dt)
 
-      Raylib.BeginDrawing()
+      BeginDrawing()
 
-        Raylib.ClearBackground(Raylib::Color.from_u8(@clear_r, @clear_g, @clear_b, @clear_a))
+        ClearBackground(RAYWHITE)
 
         @state_manager.render
 
         Text.render
 
-      Raylib.EndDrawing()
+      EndDrawing()
 
       dt = game_timer.elapsed
       game_timer.start

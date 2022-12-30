@@ -55,7 +55,7 @@ class Application
     # SDL.Mix_Init(SDL::MIX_INIT_MP3)
     # SDL.Mix_OpenAudio(SDL::MIX_DEFAULT_FREQUENCY, SDL::MIX_DEFAULT_FORMAT, SDL::MIX_DEFAULT_CHANNELS, 4096)
 
-    Raylib.InitWindow(@screen_width, @screen_height, @title)
+    InitWindow(@screen_width, @screen_height, @title)
 
     # @window = SDL.CreateWindow(@title, @screen_x, @screen_y, @screen_width, @screen_height, 0)
 
@@ -64,7 +64,7 @@ class Application
     # @renderer = SDL.CreateRenderer(@window, -1, SDL::RENDERER_PRESENTVSYNC)
     @renderer = nil
 
-    Text.setup()
+    Text.setup(@renderer)
 
     # @screenshot.setup(@renderer)
 
@@ -112,17 +112,21 @@ class Application
       @input.handle_event
       @input.update
 
+      # @input.prepare_event
+      # @input.handle_event(event) while SDL.PollEvent(event) != 0
+      # @input.update
+
       @state_manager.update(dt)
 
-      Raylib.BeginDrawing()
+      BeginDrawing()
 
-        Raylib.ClearBackground(Raylib::Color.from_u8(@clear_r, @clear_g, @clear_b, @clear_a))
+        ClearBackground(RAYWHITE)
 
         @state_manager.render
 
         Text.render
 
-      Raylib.EndDrawing()
+      EndDrawing()
 
       dt = game_timer.elapsed
       game_timer.start

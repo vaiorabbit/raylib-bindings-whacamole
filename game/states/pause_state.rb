@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
 require_relative '../../system/sound'
@@ -7,13 +7,12 @@ class PauseState < GameState
   def setup(services)
     super
     mapping = InputMapping.new(:pause)
-    mapping.register_key(:exit_game, SDL::SDLK_ESCAPE)
-    mapping.register_key(:resume_game, SDL::SDLK_SPACE)
-    mapping.register_button(:exit_game, SDL::CONTROLLER_BUTTON_BACK, gamepad_id: 0)
-    mapping.register_button(:resume_game, SDL::CONTROLLER_BUTTON_START, gamepad_id: 0)
-    mapping.register_mouse(:resume_game, SDL::BUTTON_LEFT, repeat_enabled: false)
+    mapping.register_key(:exit_game, Raylib::KEY_ESCAPE)
+    mapping.register_key(:resume_game, Raylib::KEY_SPACE)
+    mapping.register_button(:exit_game, Raylib::GAMEPAD_BUTTON_MIDDLE_LEFT, gamepad_id: 0)
+    mapping.register_button(:resume_game, Raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT, gamepad_id: 0)
+    mapping.register_mouse(:resume_game, Raylib::MOUSE_BUTTON_LEFT, repeat_enabled: false)
     input.register_mapping(mapping)
-    @screenshot = services.get(:ScreenShot)
 
     @pause_se = Sound::Sefx.new('asset/sound/Pause.wav').setup
   end
@@ -21,7 +20,6 @@ class PauseState < GameState
   def cleanup
     @pause_se.cleanup
     @pause_se = nil
-    @screenshot = nil
     super
   end
 
@@ -39,7 +37,6 @@ class PauseState < GameState
 
   def leave(_next_state_id)
     input.unset_mapping
-    @screenshot.release_texture
     @prev_state_id = nil
   end
 
@@ -60,8 +57,7 @@ class PauseState < GameState
   end
 
   def render
-    # @screenshot.render(r: 192, g: 192, b: 192) # Enable this to cheat the game ;-P
-    Text.set(32, 230, "              PAUSE", Text::RED)
-    Text.set(32, 250, "  Click or press SPACE to resume\n          ESC to exit", Text::WHITE) if @show_text
+    Text.set(32, 230, "              PAUSE", Raylib::RED)
+    Text.set(32, 250, "  Click or press SPACE to resume\n          ESC to exit", Raylib::WHITE) if @show_text
   end
 end

@@ -11,7 +11,7 @@ class Grass
 
   def setup(renderer, whacamole)
     @whacamole = whacamole
-    @grass_image.setup('asset/field/kusa_simple4.png', renderer)
+    @grass_image.setup('asset/field/kusa_simple4.png')
     @grass_image.width = Layout.size(:grass_image)[0]
     @grass_image.height = Layout.size(:grass_image)[1]
     self
@@ -25,15 +25,15 @@ class Grass
   def update(dt)
   end
 
-  def render_at(renderer, x, y)
+  def render_at(x, y)
     @grass_image.x = x
     @grass_image.y = y
-    @grass_image.render(renderer)
+    @grass_image.render()
   end
 
-  def render_per_hole(renderer)
+  def render_per_hole()
     @whacamole.moles_status.each do |status|
-      render_at(renderer, status.position_x, status.position_y + Layout.size(:grass_image_offset)[1])
+      render_at(status.position_x, status.position_y + Layout.size(:grass_image_offset)[1])
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../../system/game_state'
 require_relative '../../system/sound'
 
@@ -52,11 +52,11 @@ class ReadyState < GameState
     @background.render_background(renderer)
     @grass.render_per_hole(renderer)
 
-    Text.set(Layout.position(:score_header)[0], Layout.position(:score_header)[1], "SCORE", Text::RED)
-    Text.set(Layout.position(:score_current)[0], Layout.position(:score_current)[1], @whacamole.score.to_s.rjust(5), Text::WHITE)
+    Text.set(Layout.position(:score_header)[0], Layout.position(:score_header)[1], "SCORE", Raylib::RED)
+    Text.set(Layout.position(:score_current)[0], Layout.position(:score_current)[1], @whacamole.score.to_s.rjust(5), Raylib::WHITE)
 
     @background.render_ui(renderer, @whacamole.score, @whacamole.time_left)
 
-    Text.set(Layout.position(:ready_header)[0], Layout.position(:ready_header)[1], "READY?", Text::RED) if @show_text
+    Text.set(Layout.position(:ready_header)[0], Layout.position(:ready_header)[1], "READY?", Raylib::RED) if @show_text
   end
 end

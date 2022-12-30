@@ -1,26 +1,22 @@
-require 'sdl2'
+require 'raylib'
 
 class Image
-  FLIP_NONE = 0b00
-  FLIP_HORIZONTAL = 0b01
-  FLIP_VERTICAL = 0b10
-
   attr_reader :texture
 
-  def self.load_as_surface(path)
-    rwops = SDL.RWFromFile(path, 'rb')
-    img = SDL.IMG_Load_RW(rwops, 1)
-    image = SDL::Surface.new(img)
-    SDL.SetColorKey(image, SDL::TRUE, image[:pixels].read(:uint))
-    image
-  end
-
   def initialize
-    @rect = SDL::Rect.new
-    @rect[:x] = 0
-    @rect[:y] = 0
-    @rect[:w] = 0
-    @rect[:h] = 0
+    @rect_src = Raylib::Rectangle.new
+    @rect_src[:x] = 0
+    @rect_src[:y] = 0
+    @rect_src[:width] = 0
+    @rect_src[:height] = 0
+
+    @rect_dst = Raylib::Rectangle.new
+    @rect_dst[:x] = 0
+    @rect_dst[:y] = 0
+    @rect_dst[:width] = 0
+    @rect_dst[:height] = 0
+
+    @origin = Raylib::Vector2.create(0, 0)
 
     @original_w = 0
     @original_h = 0
@@ -28,50 +24,56 @@ class Image
     @texture = nil
   end
 
-  def setup(path, renderer)
-    image = Image.load_as_surface(path)
-    @texture = SDL.CreateTextureFromSurface(renderer, image)
-    @original_w = image[:w]
-    @original_h = image[:h]
-    @rect[:w] = @original_w
-    @rect[:h] = @original_h
+  def setup(path)
+    @texture = Raylib.LoadTexture(path)
+    @rect_src[:x] = 0
+    @rect_src[:y] = 0
+    @rect_src[:width] = @texture[:width]
+    @rect_src[:height] = @texture[:height]
 
-    SDL.FreeSurface(image)
+    @original_w = @texture[:width]
+    @original_h = @texture[:height]
+    @rect_dst[:width] = @original_w
+    @rect_dst[:height] = @original_h
   end
 
   def cleanup
-    SDL.DestroyTexture(@texture)
+    Raylib.UnloadTexture(@texture)
     @texture = nil
     @original_w = 0
     @original_h = 0
-    @rect[:x] = 0
-    @rect[:y] = 0
-    @rect[:w] = 0
-    @rect[:h] = 0
+    @rect_dst[:x] = 0
+    @rect_dst[:y] = 0
+    @rect_dst[:width] = 0
+    @rect_dst[:height] = 0
+    @rect_src[:x] = 0
+    @rect_src[:y] = 0
+    @rect_src[:width] = 0
+    @rect_src[:height] = 0
   end
 
-  def x = @rect[:x]
+  def x = @rect_dst[:x]
 
   def x=(x)
-    @rect[:x] = x
+    @rect_dst[:x] = x
   end
 
-  def y = @rect[:y]
+  def y = @rect_dst[:y]
 
   def y=(y)
-    @rect[:y] = y
+    @rect_dst[:y] = y
   end
 
-  def width = @rect[:w]
+  def width = @rect_dst[:width]
 
   def width=(w)
-    @rect[:w] = w
+    @rect_dst[:width] = w
   end
 
-  def height = @rect[:h]
+  def height = @rect_dst[:height]
 
   def height=(h)
-    @rect[:h] = h
+    @rect_dst[:height] = h
   end
 
   def original_width = @original_w
@@ -79,18 +81,11 @@ class Image
   def original_height = @original_h
 
   def reset_rect
-    # w = FFI::MemoryPointer.new(:int32)
-    # h = FFI::MemoryPointer.new(:int32)
-    # SDL.QueryTexture(@texture, nil, nil, w, h)
-
-    # @rect[:w] = w.read_int
-    # @rect[:h] = h.read_int
-
-    @rect[:w] = @original_w
-    @rect[:h] = @original_h
+    @rect_dst[:width] = @original_w
+    @rect_dst[:height] = @original_h
   end
 
-  def render(renderer, flip = FLIP_NONE)
-    SDL.RenderCopyEx(renderer, @texture, nil, @rect, 0, nil, flip)
+  def render
+    Raylib.DrawTexturePro(@texture, @rect_src, @rect_dst, @origin, 0.0,  Raylib::WHITE)
   end
 end

@@ -31,7 +31,7 @@ class Mole
   end
 
   def setup(renderer, input)
-    @mole_image.setup('asset/character/animal_mogura_kouji2.png', renderer)
+    @mole_image.setup('asset/character/animal_mogura_kouji2.png')
     @original_width = Layout.size(:mole_image)[0]
     @original_height = Layout.size(:mole_image)[1]
     @mole_image.width = @original_width

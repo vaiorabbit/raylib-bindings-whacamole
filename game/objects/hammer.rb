@@ -14,11 +14,11 @@ class Hammer
   end
 
   def setup(renderer, input)
-    @hammer_image_up.setup('asset/character/pikopiko_hammer_up.png', renderer)
+    @hammer_image_up.setup('asset/character/pikopiko_hammer_up.png')
     @hammer_image_up.width = Layout.size(:hammer_image)[0]
     @hammer_image_up.height = Layout.size(:hammer_image)[1]
 
-    @hammer_image_down.setup('asset/character/pikopiko_hammer_down.png', renderer)
+    @hammer_image_down.setup('asset/character/pikopiko_hammer_down.png')
     @hammer_image_down.width = Layout.size(:hammer_image)[0]
     @hammer_image_down.height = Layout.size(:hammer_image)[1]
 

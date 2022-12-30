@@ -1,4 +1,4 @@
-require 'sdl2'
+require 'raylib'
 require_relative '../../system/game_state'
 require_relative '../../system/input'
 require_relative '../../system/sound'
@@ -8,11 +8,11 @@ class ResultState < GameState
   def setup(services)
     super
     mapping = InputMapping.new(:result)
-    mapping.register_key(:exit_game, SDL::SDLK_ESCAPE)
-    mapping.register_key(:start_game, SDL::SDLK_SPACE)
-    mapping.register_button(:exit_game, SDL::CONTROLLER_BUTTON_BACK, gamepad_id: 0)
-    mapping.register_button(:start_game, SDL::CONTROLLER_BUTTON_START, gamepad_id: 0)
-    mapping.register_mouse(:start_game, SDL::BUTTON_LEFT, repeat_enabled: false)
+    mapping.register_key(:exit_game, Raylib::KEY_ESCAPE)
+    mapping.register_key(:start_game, Raylib::KEY_SPACE)
+    mapping.register_button(:exit_game, Raylib::GAMEPAD_BUTTON_MIDDLE_LEFT, gamepad_id: 0)
+    mapping.register_button(:start_game, Raylib::GAMEPAD_BUTTON_MIDDLE_RIGHT, gamepad_id: 0)
+    mapping.register_mouse(:start_game, Raylib::MOUSE_BUTTON_LEFT, repeat_enabled: false)
     input.register_mapping(mapping)
 
     @grass = services.get(:Grass)
@@ -69,11 +69,11 @@ class ResultState < GameState
     score = @whacamole.score
     moles = @whacamole.total_moles_count
     hit_rate = (score.to_f / moles) * 100
-    Text.set(Layout.position(:result_header)[0], Layout.position(:result_header)[1], "RESULT", Text::RED)
-    Text.set(Layout.position(:result_score)[0], Layout.position(:result_score)[1], "YOUR SCORE : #{score.to_s.rjust(3)}", Text::WHITE)
-    Text.set(Layout.position(:result_moles)[0], Layout.position(:result_moles)[1], "MOLES      : #{moles.to_s.rjust(3)}", Text::WHITE)
-    Text.set(Layout.position(:result_rate)[0], Layout.position(:result_rate)[1], "HIT RATE   : #{('%2.3f' % hit_rate).rjust(7)}%", Text::WHITE)
+    Text.set(Layout.position(:result_header)[0], Layout.position(:result_header)[1], "RESULT", Raylib::RED)
+    Text.set(Layout.position(:result_score)[0], Layout.position(:result_score)[1], "YOUR SCORE : #{score.to_s.rjust(3)}", Raylib::WHITE)
+    Text.set(Layout.position(:result_moles)[0], Layout.position(:result_moles)[1], "MOLES      : #{moles.to_s.rjust(3)}", Raylib::WHITE)
+    Text.set(Layout.position(:result_rate)[0], Layout.position(:result_rate)[1], "HIT RATE   : #{('%2.3f' % hit_rate).rjust(7)}%", Raylib::WHITE)
 
-    Text.set(32, 440, "Click or press SPACE to play again\n       Press ESC to exit", Text::RED) if @show_text
+    Text.set(32, 440, "Click or press SPACE to play again\n       Press ESC to exit", Raylib::RED) if @show_text
   end
 end

@@ -60,6 +60,6 @@ class FinishState < GameState
     end
     @grass.render_per_hole(renderer)
 
-    Text.set(Layout.position(:finish_header)[0], Layout.position(:finish_header)[1], "FINISH!", Text::RED) if @show_text
+    Text.set(Layout.position(:finish_header)[0], Layout.position(:finish_header)[1], "FINISH!", Raylib::RED) if @show_text
   end
 end
