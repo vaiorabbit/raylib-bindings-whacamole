@@ -35,9 +35,9 @@ module Sound
     end
 
     def self.play(bgm, do_loop: true)
-      self.reset
       @@current_bgm = bgm
-      return if bgm.nil?
+      return if @@current_bgm.nil?
+      self.reset
       @@current_bgm.stream[:looping] = do_loop
       Raylib.StopMusicStream(@@current_bgm.stream)
       Raylib.SetMusicVolume(@@current_bgm.stream, @@volume)

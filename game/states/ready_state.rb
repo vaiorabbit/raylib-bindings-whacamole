@@ -28,7 +28,7 @@ class ReadyState < GameState
     @time_end = 3.0
 
     @whacamole.reset
-    @ready_bgm.play(do_loop: false)
+    Sound::Bgm.play(@ready_bgm, do_loop: false)
   end
 
   def leave(_next_state_id)
@@ -49,13 +49,13 @@ class ReadyState < GameState
   end
 
   def render
-    @background.render_background(renderer)
-    @grass.render_per_hole(renderer)
+    @background.render_background()
+    @grass.render_per_hole()
 
     Text.set(Layout.position(:score_header)[0], Layout.position(:score_header)[1], "SCORE", Raylib::RED)
     Text.set(Layout.position(:score_current)[0], Layout.position(:score_current)[1], @whacamole.score.to_s.rjust(5), Raylib::WHITE)
 
-    @background.render_ui(renderer, @whacamole.score, @whacamole.time_left)
+    @background.render_ui(@whacamole.score, @whacamole.time_left)
 
     Text.set(Layout.position(:ready_header)[0], Layout.position(:ready_header)[1], "READY?", Raylib::RED) if @show_text
   end

@@ -57,6 +57,8 @@ class Application
 
     Raylib.InitWindow(@screen_width, @screen_height, @title)
 
+    Raylib.InitAudioDevice()
+
     # @window = SDL.CreateWindow(@title, @screen_x, @screen_y, @screen_width, @screen_height, 0)
 
     # SDL.SetWindowGrab(@window, SDL::TRUE) # Restrict mouse cursor to window
@@ -97,8 +99,9 @@ class Application
     # SDL.IMG_Quit()
     # SDL.TTF_Quit()
     # SDL.Quit()
-    CloseAudioDevice()
-    CloseWindow()
+
+    Raylib.CloseAudioDevice()
+    Raylib.CloseWindow()
   end
 
   def main
@@ -109,6 +112,7 @@ class Application
     dt = 0.0
 
     until @end_main
+      Sound::Bgm.update(dt)
       @input.handle_event
       @input.update
 
