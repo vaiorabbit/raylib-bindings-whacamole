@@ -19,11 +19,11 @@ class HitEffect
   end
 
   def setup(image)
-    @hit_image = image #.setup('asset/field/kusa_simple4.png', renderer)
+    @hit_image = image
   end
 
   def cleanup
-    @hit_image = nil #.cleanup
+    @hit_image = nil
   end
 
   def reset()
@@ -85,10 +85,7 @@ class HitEffect
     @rect.height = @hit_image.height * @scale_y
     @rect.x = @pos_x - @rect.width * 0.5
     @rect.y = @pos_y - @rect.height * 0.5
-#    SDL.SetTextureAlphaMod(@hit_image.texture, @alpha)
-#    SDL.RenderCopyEx(renderer, @hit_image.texture, nil, @rect, 0, nil, SDL::FLIP_NONE)
     Raylib.DrawTexturePro(@hit_image.texture, @hit_image.rect_src, @rect, Raylib::Vector2.create, 0.0, Raylib::Color.from_u8(255, 255, 255, @alpha))
-    #@hit_image.render
   end
 end
 
@@ -107,7 +104,6 @@ class HitEffects
     @hit_image.setup('asset/effect/hit_effect.png')
     @hit_image.width = Layout.size(:hit_image)[0]
     @hit_image.height = Layout.size(:hit_image)[1]
-#    SDL.SetTextureBlendMode(@hit_image.texture, SDL::BLENDMODE_BLEND)
     @effects.each do |effect|
       effect.setup(@hit_image)
     end

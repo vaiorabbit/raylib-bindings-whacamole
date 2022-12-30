@@ -38,7 +38,7 @@ class ResultState < GameState
     @time_current = 0.0
     @time_end = 2.0
     input.set_mapping(:result)
-    @gameover_bgm.play(do_loop: false)
+    Sound::Bgm.play(@gameover_bgm, do_loop: false)
   end
 
   def leave(_next_state_id)
@@ -63,8 +63,8 @@ class ResultState < GameState
   end
 
   def render
-    @background.render_background(renderer)
-    @grass.render_per_hole(renderer)
+    @background.render_background()
+    @grass.render_per_hole()
 
     score = @whacamole.score
     moles = @whacamole.total_moles_count

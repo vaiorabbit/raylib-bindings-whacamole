@@ -69,7 +69,7 @@ class MainState < GameState
 
   def leave(_next_state_id)
     input.unset_mapping
-    Sound::Bgm.fadeout(ms: 500) unless _next_state_id == :pause
+    Sound::Bgm.fadeout(sec: 0.5) unless _next_state_id == :pause
   end
 
   def update(dt)

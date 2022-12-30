@@ -49,16 +49,16 @@ class FinishState < GameState
   end
 
   def render
-    @background.render_background(renderer)
+    @background.render_background()
     @whacamole.moles_status.each do |status|
       if status.visible?
         @mole.x, @mole.y = status.position_x, status.position_y
         @mole.height = @mole.original_height * status.animation_scale_y
         @mole.y += 0.8 * @mole.original_height * (1.0 - status.animation_scale_y)
-        @mole.render(renderer)
+        @mole.render()
       end
     end
-    @grass.render_per_hole(renderer)
+    @grass.render_per_hole()
 
     Text.set(Layout.position(:finish_header)[0], Layout.position(:finish_header)[1], "FINISH!", Raylib::RED) if @show_text
   end

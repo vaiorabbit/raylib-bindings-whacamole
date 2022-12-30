@@ -1,7 +1,7 @@
 require 'raylib'
 
 class Image
-  attr_reader :texture, :rect_src, :rect_dst
+  attr_reader :texture, :rect_src
 
   def initialize
     @rect_src = Raylib::Rectangle.new
