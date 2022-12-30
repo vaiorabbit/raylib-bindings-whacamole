@@ -13,6 +13,7 @@
 
 require 'raylib'
 require_relative 'raylib/system/image'
+require_relative 'raylib/system/input'
 require_relative 'raylib/system/text'
 require_relative 'raylib/system/timer'
 require_relative 'raylib/system/draw'
@@ -81,8 +82,36 @@ if __FILE__ == $PROGRAM_NAME
 
   dt = 0.0
 
+  input = Input.new
+  input.setup
+  input.screen_width = screen_width
+  input.screen_height = screen_height
+
+  mapping = InputMapping.new(:title)
+  # mapping.register_key(:exit_game, Raylib::KEY_ESCAPE)
+  mapping.register_key(:start_game, Raylib::KEY_SPACE)
+  # mapping.register_button(:exit_game, SDL::CONTROLLER_BUTTON_BACK, gamepad_id: 0)
+  # mapping.register_button(:start_game, SDL::CONTROLLER_BUTTON_START, gamepad_id: 0)
+  # mapping.register_mouse(:start_game, SDL::BUTTON_LEFT, repeat_enabled: false)
+  mapping.register_mouse(:resume_game, Raylib::MOUSE_BUTTON_LEFT)
+  mapping.register_button(:resume_game, Raylib::GAMEPAD_BUTTON_RIGHT_FACE_DOWN, repeat_enabled: true, repeat_interval: 5)
+
+  input.register_mapping(mapping)
+  input.set_mapping(:title)
+
   until WindowShouldClose()
     ### Update phase
+
+    input.handle_event
+    input.update
+
+    if input.down? :start_game
+      p 'start_game'
+    end
+    if input.trigger? :resume_game
+      p 'resume_game'
+    end
+    # p [input.mouse_pos_x, input.mouse_pos_y, input.mouse_rel_x, input.mouse_rel_y]
 
     Sound::Bgm.update(dt)
     if IsKeyPressed(KEY_S)
@@ -194,6 +223,9 @@ if __FILE__ == $PROGRAM_NAME
   bgm.cleanup
 
   image.cleanup
+
+  input.unset_mapping
+  input.cleanup
 
   Text.cleanup
 
