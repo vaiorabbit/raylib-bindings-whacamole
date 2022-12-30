@@ -1,4 +1,4 @@
-require 'raylib'
+require 'sdl2'
 require_relative 'system/application'
 require_relative 'system/draw'
 require_relative 'system/services'
@@ -16,8 +16,33 @@ require_relative 'game/states/pause_state'
 require_relative 'game/states/finish_state'
 require_relative 'game/states/result_state'
 
+def load_sdl2_lib
+  case RbConfig::CONFIG['host_os']
+  when /mswin|msys|mingw/
+    if Module.const_defined?('RubyInstaller')
+      # Notify additional DLL search path to run SDL_LoadObject(libpng, etc.) correctly.
+      # See '$(RubyInstaller)/lib/ruby/site_ruby/3.1.0/ruby_installer/runtime/singleton.rb' and 'dll_directory.rb'.
+      RubyInstaller::Runtime.add_dll_directory(Dir.pwd + '/third_party/SDL2/')
+    end
+    SDL.load_lib(Dir.pwd + '/third_party/SDL2/SDL2.dll', output_error = false,
+                 image_libpath: Dir.pwd + '/third_party/SDL2/SDL2_image.dll',
+                 mixer_libpath: Dir.pwd + '/third_party/SDL2/SDL2_mixer.dll',
+                 ttf_libpath: Dir.pwd + '/third_party/SDL2/SDL2_ttf.dll')
+  when /darwin/
+    SDL.load_lib('/opt/homebrew/lib/libSDL2.dylib', output_error = false,
+                 image_libpath: '/opt/homebrew/lib/libSDL2_image.dylib',
+                 mixer_libpath: '/opt/homebrew/lib/libSDL2_mixer.dylib',
+                 ttf_libpath: '/opt/homebrew/lib/libSDL2_ttf.dylib')
+  when /linux/
+    SDL.load_lib('libSDL2.so') # not tested
+  else
+    raise 'Unsupported platform.'
+  end
+end
+
 if __FILE__ == $PROGRAM_NAME
-  app = Application.new(title: "Whac-a-Mole! : Ruby raylib bindings demo",
+  load_sdl2_lib
+  app = Application.new(title: "Whac-a-Mole! : Ruby SDL2 bindings demo",
                         screen_width: Layout.size(:screen)[0], screen_height: Layout.size(:screen)[1],
                         clear_r: 140, clear_g: 200, clear_b: 90, clear_a: 255)
 
@@ -35,11 +60,12 @@ if __FILE__ == $PROGRAM_NAME
     # [NOTE] Services called
     # - ":Renderer (pointer to SDL_Renderer)" and
     # - ":Input (instance of system/input)"
+    # - ":ScreenShot (instance of system/screenshot)"
     # are provided by the system and always available by default.
-    services.register(:Hammer, Hammer.new.setup(services.get(:Input)))
+    services.register(:Hammer, Hammer.new.setup(services.get(:Renderer), services.get(:Input)))
     services.register(:CursorCircle, Circle::Cache.new(radius: 15.0, r: 255, g: 32, b: 32, a: 128))
 
-    mole = Mole.new.setup(services.get(:Input))
+    mole = Mole.new.setup(services.get(:Renderer), services.get(:Input))
     services.register(:Mole, mole)
 
     row, col = 3, 3
@@ -57,9 +83,9 @@ if __FILE__ == $PROGRAM_NAME
     end
     services.register(:WhacAMole, whacamole)
 
-    services.register(:Grass, Grass.new.setup(whacamole))
-    services.register(:Background, Background.new.setup())
-    services.register(:HitEffects, HitEffects.new.setup())
+    services.register(:Grass, Grass.new.setup(services.get(:Renderer), whacamole))
+    services.register(:Background, Background.new.setup(services.get(:Renderer)))
+    services.register(:HitEffects, HitEffects.new.setup(services.get(:Renderer)))
   end
 
   app.setup(setup_func)
