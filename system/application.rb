@@ -10,9 +10,9 @@ shared_lib_path = Gem::Specification.find_by_name('raylib-bindings').full_gem_pa
 
 case RUBY_PLATFORM
 when /mswin|msys|mingw|cygwin/
-  Raylib.load_lib(shared_lib_path + 'libraylib.dll', raygui_libpath: shared_lib_path + 'raygui.dll', physac_libpath: shared_lib_path + 'physac.dll')
+  Raylib.load_lib(shared_lib_path + 'libraylib.dll')
 when /darwin/
-  Raylib.load_lib(shared_lib_path + 'libraylib.dylib', raygui_libpath: shared_lib_path + 'raygui.dylib', physac_libpath: shared_lib_path + 'physac.dylib')
+  Raylib.load_lib(shared_lib_path + 'libraylib.dylib')
 else
   raise RuntimeError, "Unknown OS: #{RUBY_PLATFORM}"
 end
@@ -48,6 +48,7 @@ class Application
 
   def setup(setup_func = nil)
     Raylib.InitWindow(@screen_width, @screen_height, @title)
+    Raylib.SetWindowPosition(@screen_x, @screen_y)
     Raylib.InitAudioDevice()
 
     Text.setup()
