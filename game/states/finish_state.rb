@@ -1,5 +1,4 @@
 require_relative '../../system/game_state'
-require_relative '../../system/input'
 require_relative '../../system/sound'
 require_relative '../layout'
 

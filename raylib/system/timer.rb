@@ -20,7 +20,7 @@ class Timer
   end
 
   def elapsed
-    diff(now, @start)
+    now() - @start
   end
 
   private

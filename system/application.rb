@@ -39,7 +39,7 @@ class Application
     @state_manager.initial_state_id = state.state_id if initial_state
   end
 
-  def setup(setup_func)
+  def setup(setup_func = nil)
     SDL.Init(SDL::INIT_TIMER | SDL::INIT_AUDIO | SDL::INIT_VIDEO | SDL::INIT_GAMECONTROLLER)
     SDL.IMG_Init(SDL::IMG_INIT_PNG)
     SDL.TTF_Init()
@@ -57,19 +57,22 @@ class Application
     @screenshot.setup(@renderer)
 
     @input.setup
+    @input.screen_width = @screen_width
+    @input.screen_height = @screen_height
 
     @services.setup
     @services.register_external(:Renderer, @renderer)
     @services.register_external(:Input, @input)
     @services.register_external(:ScreenShot, @screenshot)
 
-    setup_func.call(@services)
+    setup_func&.call(@services)
 
     @state_manager.setup(@services)
     @state_manager.start
   end
 
-  def cleanup
+  def cleanup(cleanup_func = nil)
+    cleanup_func&.call
     @state_manager.cleanup
     @services.cleanup
     @input.cleanup

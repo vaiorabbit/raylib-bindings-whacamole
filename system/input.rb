@@ -219,6 +219,7 @@ end
 
 class Input
   attr_reader :mouse_pos_x, :mouse_pos_y, :mouse_rel_x, :mouse_rel_y
+  attr_accessor :screen_width, :screen_height
 
   def initialize
     @current_mapping = nil
@@ -228,6 +229,9 @@ class Input
     @mouse_pos_y = 0
     @mouse_rel_x = 0
     @mouse_rel_y = 0
+
+    @screen_width = 0
+    @screen_height = 0
 
     @active_gamepads = {}
   end
@@ -289,6 +293,8 @@ class Input
       end
 
     when SDL::MOUSEBUTTONDOWN
+      from_touch_device = (event[:button][:which] == SDL::TOUCH_MOUSEID)
+      return if from_touch_device
       mouse_button = event[:button][:button]
       mouse_state = event[:button][:state]
       if @current_mapping&.sdl_mouse_map&.key?(mouse_button)
@@ -297,6 +303,8 @@ class Input
         button.down = 1
       end
     when SDL::MOUSEBUTTONUP
+      from_touch_device = (event[:button][:which] == SDL::TOUCH_MOUSEID)
+      return if from_touch_device
       mouse_button = event[:button][:button]
       mouse_state = event[:button][:state]
       if @current_mapping&.sdl_mouse_map&.key?(mouse_button)
@@ -305,10 +313,18 @@ class Input
         button.down = 0
       end
     when SDL::MOUSEMOTION
+      from_touch_device = (event[:motion][:which] == SDL::TOUCH_MOUSEID)
+      return if from_touch_device
       @mouse_pos_x = event[:motion][:x]
       @mouse_pos_y = event[:motion][:y]
       @mouse_rel_x = event[:motion][:xrel]
       @mouse_rel_y = event[:motion][:yrel]
+
+    when SDL::FINGERDOWN, SDL::FINGERUP, SDL::FINGERMOTION
+      @mouse_pos_x = event[:tfinger][:x] * @screen_width
+      @mouse_pos_y = event[:tfinger][:y] * @screen_height
+      @mouse_rel_x = event[:tfinger][:dx]
+      @mouse_rel_y = event[:tfinger][:dy]
 
     when SDL::CONTROLLERDEVICEADDED
       gamepad_id = event[:cdevice][:which]

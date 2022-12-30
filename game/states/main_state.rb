@@ -85,9 +85,9 @@ class MainState < GameState
     end
 
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
-    @hammer.down = (input.mouse_down? :hammer_attack)
+    @hammer.down = (input.down? :hammer_attack)
 
-    if input.mouse_trigger? :hammer_attack
+    if input.trigger? :hammer_attack
       @swing_se.play
       hit = false
       @whacamole.moles_status.each do |status|

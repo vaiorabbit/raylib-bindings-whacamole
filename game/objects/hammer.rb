@@ -1,6 +1,5 @@
 require_relative '../layout'
 require_relative '../../system/image'
-require_relative '../../system/input'
 
 class Hammer
 
