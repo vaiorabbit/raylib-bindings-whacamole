@@ -35,11 +35,11 @@ class Hammer
     @y = pointer_y + Layout.size(:hammer_image_offset)[1]
   end
 
-  def render(renderer)
+  def render()
     hammer_image = @down ? @hammer_image_down : @hammer_image_up
     hammer_image.x = @x
     hammer_image.y = @y
-    hammer_image.render(renderer)
+    hammer_image.render()
   end
 
 end

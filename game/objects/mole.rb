@@ -46,10 +46,10 @@ class Mole
   def update(dt, input)
   end
 
-  def render(renderer)
+  def render()
     @mole_image.x = @x
     @mole_image.y = @y
-    @mole_image.render(renderer)
+    @mole_image.render()
   end
 
 end

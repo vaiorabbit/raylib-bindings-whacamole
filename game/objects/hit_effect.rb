@@ -10,11 +10,11 @@ class HitEffect
 
   def initialize
     @hit_image = nil
-    @rect = SDL::Rect.new
-    @rect[:x] = 0
-    @rect[:y] = 0
-    @rect[:w] = 0
-    @rect[:h] = 0
+    @rect = Raylib::Rectangle.new
+    @rect.x = 0
+    @rect.y = 0
+    @rect.width = 0
+    @rect.height = 0
     reset
   end
 
@@ -79,13 +79,16 @@ class HitEffect
     @time_current += dt
   end
 
-  def render(renderer)
-    @rect[:w] = @hit_image.width * @scale_x
-    @rect[:h] = @hit_image.height * @scale_y
-    @rect[:x] = @pos_x - @rect[:w] * 0.5
-    @rect[:y] = @pos_y - @rect[:h] * 0.5
-    SDL.SetTextureAlphaMod(@hit_image.texture, @alpha)
-    SDL.RenderCopyEx(renderer, @hit_image.texture, nil, @rect, 0, nil, SDL::FLIP_NONE)
+  def render()
+    return if not @running
+    @rect.width = @hit_image.width * @scale_x
+    @rect.height = @hit_image.height * @scale_y
+    @rect.x = @pos_x - @rect.width * 0.5
+    @rect.y = @pos_y - @rect.height * 0.5
+#    SDL.SetTextureAlphaMod(@hit_image.texture, @alpha)
+#    SDL.RenderCopyEx(renderer, @hit_image.texture, nil, @rect, 0, nil, SDL::FLIP_NONE)
+    Raylib.DrawTexturePro(@hit_image.texture, @hit_image.rect_src, @rect, Raylib::Vector2.create, 0.0, Raylib::Color.from_u8(255, 255, 255, @alpha))
+    #@hit_image.render
   end
 end
 
@@ -133,9 +136,9 @@ class HitEffects
     end
   end
 
-  def render(renderer)
+  def render()
     @effects.each do |effect|
-      effect.render(renderer)
+      effect.render()
     end
   end
 end

@@ -64,7 +64,7 @@ class MainState < GameState
     @hammer.set_position(input.mouse_pos_x, input.mouse_pos_y)
     @hammer.down = false
     @effects.hide
-    @main_bgm.play unless _prev_state_id == :pause
+    Sound::Bgm.play(@main_bgm, do_loop: true) unless _prev_state_id == :pause
   end
 
   def leave(_next_state_id)
@@ -112,8 +112,8 @@ class MainState < GameState
   end
 
   def render
-    @background.render_background(renderer)
-    @background.render_ui(renderer, @whacamole.score, @whacamole.time_left)
+    @background.render_background()
+    @background.render_ui(@whacamole.score, @whacamole.time_left)
 
     @whacamole.moles_status.each do |status|
       if status.visible?
@@ -122,14 +122,14 @@ class MainState < GameState
         @mole.height = @mole.original_height * status.animation_scale_y
         @mole.x += 0.5 * @mole.original_width * (1.0 - status.animation_scale_x)
         @mole.y += 0.8 * @mole.original_height * (1.0 - status.animation_scale_y)
-        @mole.render(renderer)
+        @mole.render()
       end
     end
-    @grass.render_per_hole(renderer)
+    @grass.render_per_hole()
 
-    @hammer.render(renderer)
-    Circle.render(renderer, @cursor_circle, input.mouse_pos_x, input.mouse_pos_y) unless @hammer.down
+    @hammer.render()
+    Circle.render(@cursor_circle, input.mouse_pos_x, input.mouse_pos_y) unless @hammer.down
 
-    @effects.render(renderer)
+    @effects.render()
   end
 end
