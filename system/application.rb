@@ -13,6 +13,8 @@ when /mswin|msys|mingw|cygwin/
   Raylib.load_lib(shared_lib_path + 'libraylib.dll')
 when /darwin/
   Raylib.load_lib(shared_lib_path + 'libraylib.dylib')
+when /aarch64-linux/
+  Raylib.load_lib(shared_lib_path + 'libraylib.so')
 else
   raise RuntimeError, "Unknown OS: #{RUBY_PLATFORM}"
 end
