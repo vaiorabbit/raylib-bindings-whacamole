@@ -3,7 +3,7 @@
 # Whac-a-Mole! : Ruby raylib bindings demo #
 
 *   Created : 2022-05-22
-*   Last modified : 2023-01-02
+*   Last modified : 2023-11-19
 
 <img src="https://raw.githubusercontent.com/vaiorabbit/raylib-bindings-whacamole/main/doc/screenshot_00.png" width="300"> <img src="https://raw.githubusercontent.com/vaiorabbit/raylib-bindings-whacamole/main/doc/screenshot_01.png" width="300">
 

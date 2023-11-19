@@ -1,3 +1,7 @@
+2023-11-19  vaiorabbit  <http://twitter.com/vaiorabbit>
+
+	* Fixed dylib path for macOS
+
 2023-01-02  vaiorabbit  <http://twitter.com/vaiorabbit>
 
 	* Added setting for Chromebook Linux

@@ -12,9 +12,11 @@ case RUBY_PLATFORM
 when /mswin|msys|mingw|cygwin/
   Raylib.load_lib(shared_lib_path + 'libraylib.dll')
 when /darwin/
-  Raylib.load_lib(shared_lib_path + 'libraylib.dylib')
-when /aarch64-linux/
-  Raylib.load_lib(shared_lib_path + 'libraylib.so')
+  arch = RUBY_PLATFORM.split('-')[0]
+  Raylib.load_lib(shared_lib_path + "libraylib.#{arch}.dylib")
+when /linux/
+  arch = RUBY_PLATFORM.split('-')[0]
+  Raylib.load_lib(shared_lib_path + "libraylib.#{arch}.so")
 else
   raise RuntimeError, "Unknown OS: #{RUBY_PLATFORM}"
 end
