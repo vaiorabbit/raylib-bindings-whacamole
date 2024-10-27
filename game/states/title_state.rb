@@ -52,6 +52,6 @@ class TitleState < GameState
 
     Text.set(32, 180, "           Whac-a-Mole!\n    Ruby raylib-bindings demo", Raylib::BLUE)
     Text.set(32, 300, "  Click or press SPACE to start\n         Press ESC to exit", Raylib::RED)
-    Text.set(32, 440, "       2022-2023 vaiorabbit", Raylib::WHITE)
+    Text.set(32, 440, "       2022-2024 vaiorabbit", Raylib::WHITE)
   end
 end
