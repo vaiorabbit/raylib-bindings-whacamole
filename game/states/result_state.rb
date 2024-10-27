@@ -19,7 +19,7 @@ class ResultState < GameState
     @background = services.get(:Background)
     @whacamole = services.get(:WhacAMole)
 
-    @gameover_bgm = Sound::Bgm.new('asset/sound/GameOver.mp3').setup
+    @gameover_bgm = Sound::Bgm.new('asset/sound/GameOver.ogg').setup
   end
 
   def cleanup

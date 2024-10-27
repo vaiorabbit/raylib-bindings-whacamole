@@ -17,7 +17,7 @@ class TitleState < GameState
     @grass = services.get(:Grass)
     @background = services.get(:Background)
 
-    @title_bgm = Sound::Bgm.new('asset/sound/Title.mp3').setup
+    @title_bgm = Sound::Bgm.new('asset/sound/Title.ogg').setup
   end
 
   def cleanup

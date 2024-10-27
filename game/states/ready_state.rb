@@ -9,7 +9,7 @@ class ReadyState < GameState
     @background = services.get(:Background)
     @whacamole = services.get(:WhacAMole)
 
-    @ready_bgm = Sound::Bgm.new('asset/sound/Ready.mp3').setup
+    @ready_bgm = Sound::Bgm.new('asset/sound/Ready.ogg').setup
   end
 
   def cleanup

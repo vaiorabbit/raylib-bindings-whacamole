@@ -37,7 +37,7 @@ class MainState < GameState
     @swing_se = Sound::Sefx.new('asset/sound/swing2.wav').setup
     @appear_se = Sound::Sefx.new('asset/sound/Appear.wav').setup
 
-    @main_bgm = Sound::Bgm.new('asset/sound/Main.mp3').setup
+    @main_bgm = Sound::Bgm.new('asset/sound/Main.ogg').setup
   end
 
   def cleanup
