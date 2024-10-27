@@ -28,7 +28,7 @@ Demonstration on how to use [Ruby raylib bindings](https://github.com/vaiorabbit
 The zlib/libpng License ( http://opensource.org/licenses/Zlib ).
 
     Whac-a-Mole! : Ruby raylib bindings demo
-    Copyright (c) 2022-2023 vaiorabbit <http://twitter.com/vaiorabbit>
+    Copyright (c) 2022-2024 vaiorabbit <http://twitter.com/vaiorabbit>
 
     This software is provided 'as-is', without any express or implied
     warranty. In no event will the authors be held liable for any damages
